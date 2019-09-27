@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    name:'MyData',
+    name:'MyDataStudent',
     data(){ //组件用到的数据
         return{
 

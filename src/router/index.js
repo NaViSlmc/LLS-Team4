@@ -13,7 +13,7 @@ import MyMajorStudent from '../components/Students/MyMajorStudent.vue' //我的�
 import MyGrow from '../components/Students/MyGrow.vue'  // 我的成长
 import MyJoin from '../components/Students/MyJoin.vue'// 我的参加
 import MyExam from '../components/Students/MyExam.vue'// 我的考试
-import MyData from '../components/Students/MyData.vue'// 个人资料
+import MyDataStudent from '../components/Students/MyDataStudent.vue'// 个人资料
 Vue.use(VueRouter);
 
 const routes = [
@@ -67,9 +67,9 @@ const routes = [
       },
       {
         // 个人资料
-        path: 'MyData', 
-        component: MyData,
-        name: 'MyData',
+        path: 'MyDataStudent', 
+        component: MyDataStudent,
+        name: 'MyDataStudent',
       }
     ]
   }
