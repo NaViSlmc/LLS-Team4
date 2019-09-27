@@ -1,6 +1,6 @@
 <template>
   <div id="copyRight" class="footer">
-    <div class="z-footerWarp">
+    <div class="z-footerWrap">
       <div class="z-footer1">
         <span class="z-uplogo">
           <img src="../../images/logo.png">

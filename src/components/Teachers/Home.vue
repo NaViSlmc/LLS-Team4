@@ -5,7 +5,7 @@
         <nav-menus></nav-menus>
       </el-header>
       <el-main>
-        切换内容
+        <router-view></router-view>
       </el-main>
       <el-footer>
         <copy-right></copy-right>
