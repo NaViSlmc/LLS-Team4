@@ -9,7 +9,7 @@
 
       <!--中间部分-->
       <el-main>
-        切换内容
+        <router-view />
       </el-main>
 
       <!-- 尾部-->
