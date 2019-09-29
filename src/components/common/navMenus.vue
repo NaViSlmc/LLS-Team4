@@ -26,7 +26,7 @@
         <div class="grid-content bg-purple">
           <ul class="loginUser">
             <li>
-              <span style="cursor:pointer;color:#A3A3A4;font-size:14px">
+              <span style="cursor:pointer;color:#A3A3A4;font-size:14px" @click="toggUserData">
                 {{ userName }}
               </span>
               <span class="ask_title">
@@ -50,8 +50,16 @@ export default {
     }
   },
   methods: {
+    // 用户详情页跳转
+    toggUserData () {
+      if ('/teacher/MyData' !== this.$router.history.current.fullPath) {
+        this.activeIndex = '';
+        this.$router.push('/teacher/MyData');
+      }
+    },
     // 导航栏切换
     handleSelect (key) {
+      this.activeIndex = key;
       // 当前要跳转的path不能等于当前path，否则会路由报错
       if (`/teacher/${key}` !== this.$router.history.current.fullPath) {
         this.$router.push(`/teacher/${key}`);
@@ -67,6 +75,14 @@ export default {
               type: 'success'
             });
             // 清空localStorage
+            window.localStorage.removeItem('userId');
+            window.localStorage.removeItem('userName');
+            this.$router.push('/');
+          } else if (response.data.code === 403) {
+            this.$message({
+              message: '超时未操作,请重新登录',
+              type: 'warning'
+            });
             window.localStorage.removeItem('userId');
             window.localStorage.removeItem('userName');
             this.$router.push('/');
