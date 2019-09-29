@@ -9,15 +9,15 @@
       <el-col :span="14">
         <div class="grid-content bg-purple">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-            <el-menu-item index="1">我的专业</el-menu-item>
+            <el-menu-item index="MyMajorStudent">我的专业</el-menu-item>
             <el-submenu index="2">
               <template slot="title">我的课程</template>
               <el-menu-item index="2-1">选项1</el-menu-item>
               <el-menu-item index="2-2">选项2</el-menu-item>
             </el-submenu>
-            <el-menu-item index="3">我的成长</el-menu-item>
-            <el-menu-item index="4">我的参与</el-menu-item>
-            <el-menu-item index="5">我的考试</el-menu-item>
+            <el-menu-item index="MyGrow">我的成长</el-menu-item>
+            <el-menu-item index="MyJoin">我的参与</el-menu-item>
+            <el-menu-item index="MyExam">我的考试</el-menu-item>
           </el-menu>
         </div>
       </el-col>

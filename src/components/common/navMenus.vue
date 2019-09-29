@@ -9,23 +9,24 @@
       <el-col :span="14">
         <div class="grid-content bg-purple">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-            <el-menu-item index="1">我教的专业</el-menu-item>
-            <el-submenu index="2">
+            <el-menu-item index="MyMajor">我教的专业</el-menu-item>
+            <el-submenu index="MyTeachCourses">
               <template slot="title">我教的课程</template>
-              <el-menu-item index="2-1">选项1</el-menu-item>
-              <el-menu-item index="2-2">选项2</el-menu-item>
+              <el-menu-item index="MyTeachCourses">课程1</el-menu-item>
+              <el-menu-item index="MyTeachCourses">课程2</el-menu-item>
             </el-submenu>
-            <el-menu-item index="3">考试管理</el-menu-item>
-            <el-menu-item index="4">学员管理</el-menu-item>
-            <el-menu-item index="5">课程管理</el-menu-item>
-            <el-menu-item index="6">我的贡献</el-menu-item>
+            <el-menu-item index="MyExamination">考试管理</el-menu-item>
+            <el-menu-item index="MyStudents">学员管理</el-menu-item>
+            <el-menu-item index="MyCourse">课程管理</el-menu-item>
+            <el-menu-item index="MyContribution">我的贡献</el-menu-item>
           </el-menu>
         </div>
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple">
           <ul class="loginUser">
-            <li><span style="cursor:pointer;color:#A3A3A4;font-size:14px">
+            <li>
+              <span style="cursor:pointer;color:#A3A3A4;font-size:14px">
                 讲师
               </span>
               <span class="ask_title">
@@ -35,7 +36,6 @@
             </li>
           </ul>
         </div>
-
       </el-col>
     </el-row>
   </div>
@@ -45,12 +45,13 @@ export default {
   name: 'navMenus',
   data () {
     return {
-      activeIndex: '1',
+      activeIndex: 'MyMajor',
     }
   },
   methods: {
-    handleSelect (key, keyPath) {
-      console.log(key, keyPath);
+    // 导航栏切换
+    handleSelect (key) {
+      this.$router.push(`/teacher/${key}`);
     }
   }
 }
