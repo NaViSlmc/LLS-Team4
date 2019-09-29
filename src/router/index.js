@@ -26,7 +26,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    redirect: '/MyExamination'
+    redirect: '/logined'
   },
   {
     path: '/logined',

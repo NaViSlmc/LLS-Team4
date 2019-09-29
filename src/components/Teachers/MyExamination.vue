@@ -1,11 +1,19 @@
 <template>
   <div>
-    <div  class="header">
-      
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-1">
+        <div class="header-2">
+          <p>考试管理</p>
+          <span>贴合知识点 自动判卷 多维度统计</span>
+        </div>
+        <img src="../../images/01.png" alt="" class='img1'>
+      </div>
     </div>
-    <div class="header-1" style="margin-left: 256px;">
-      <p>我的考试</p>
-      <span>记录我在联想班的考试成绩以及学校的考试成绩各个方面的表现与进步积极向上 努力进取 养成习惯 成长为未来社会栋梁</span>
+    <!-- 中间 -->
+    <div class='container'>
+        <el-tag>发布考试</el-tag>
+        <el-tag>考试管理</el-tag>
     </div>
   </div>
 </template>
@@ -21,10 +29,44 @@ export default {
 </script>
 <style lang="">
 .header {
+  width: 100%;
+  height: 144px;
+  background-size: 38%;
+  background: linear-gradient(60deg, #6cc4ce, #65f1ce);
+}
+.header-1 {
   width: 1280px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  margin-left:200px;
   overflow: hidden;
-  padding-left: 64px;
+}
+.header-2 {
+  width: 548px;
+  float: left;
+}
+.header-2 p {
+  font-size: 26px;
+  color: #ffffff;
+  font-weight: 400;
+}
+.header-2 span {
+  display: inline-block;
+  width: 500px;
+  color: #ffffff;
+  opacity: 0.9;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 18px;
+  margin-top: 3px;
+}
+.img1 {
+  float: right;
+}
+.container{
+  margin-left:50px;
+  background: bisque;
+  /* width:100%; */
+  /* height:500px; */
 }
 
 </style>
