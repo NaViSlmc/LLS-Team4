@@ -27,12 +27,12 @@
           <ul class="loginUser">
             <li>
               <span style="cursor:pointer;color:#A3A3A4;font-size:14px">
-                讲师
+                {{ userName }}
               </span>
               <span class="ask_title">
                 在线解答
               </span>
-              <span style="cursor:pointer;color:#A3A3A4;font-size:14px;margin-left:15px">退出</span>
+              <span style="cursor:pointer;color:#A3A3A4;font-size:14px;margin-left:15px" @click="userOut">退出</span>
             </li>
           </ul>
         </div>
@@ -45,14 +45,21 @@ export default {
   name: 'navMenus',
   data () {
     return {
-      activeIndex: 'MyMajor',
+      activeIndex: 'MyMajor',// 当前选择导航栏
+      userName: '' // 用户名
     }
   },
   methods: {
     // 导航栏切换
     handleSelect (key) {
       this.$router.push(`/teacher/${key}`);
+    },
+    userOut () {
+
     }
+  },
+  created () {
+    this.userName = window.localStorage.getItem('userName'); // 从本地仓库拿到用户名
   }
 }
 </script>
