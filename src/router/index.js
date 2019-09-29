@@ -20,12 +20,13 @@ import MyGrow from '../components/Students/MyGrow.vue'  // 我的成长
 import MyJoin from '../components/Students/MyJoin.vue'// 我的参加
 import MyExam from '../components/Students/MyExam.vue'// 我的考试
 import MyDataStudent from '../components/Students/MyDataStudent.vue'// 个人资料
+import MyClass from '../components/Students/MyClass.vue'// 个人资料
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    redirect: '/logined'
+    redirect: '/MyExamination'
   },
   {
     path: '/logined',
@@ -81,6 +82,12 @@ const routes = [
         path: 'MyMajorStudent', //匹配路径
         component: MyMajorStudent,//组件
         name: 'MyMajorStudent',//名字
+      },
+      {
+        // 我的课程
+        path: 'MyClass', //匹配路径
+        component: MyClass,//组件
+        name: 'MyClass',//名字
       },
       {
         // 我的成长
