@@ -193,19 +193,22 @@
             </div>
             <div style="display:flex;margin-top:20px;">
               <div class="pwd_item">请输入新密码：</div>
-              <el-input placeholder="请输入新密码" show-password v-model="newPwd" clearable style="width:50%">
+              <el-input placeholder="请输入新密码" show-password v-model="newPwd" clearable style="width:50%" @blur="inputBlur">
               </el-input>
             </div>
             <div style="display:flex;margin-top:20px;">
               <div class="pwd_item">请再次输入新密码：</div>
-              <el-input placeholder="请再次输入新密码：" show-password  v-model="newPwd2" clearable style="width:50%">
+              <el-input placeholder="请再次输入新密码：" show-password v-model="newPwd2" clearable style="width:50%" @blur="inputBlur">
               </el-input>
             </div>
             <div style="display:flex">
               <div class="pwd_item"></div>
               <el-alert v-show="!isPwdSame" title="两次密码输入不一致" type="error" style="width:50%;padding:5px"></el-alert>
             </div>
-            <div style="text-align:center;margin-top:20px"><el-button style="width:150px" type="primary" @click="changePwd">确认修改</el-button></div>
+            <div style="text-align:center;margin-top:20px">
+              <el-button style="width:150px" type="primary" @click="changePwd" :disabled="!isPwdSame">确认修改
+              </el-button>
+            </div>
           </div>
         </div>
       </el-tab-pane>
@@ -226,8 +229,36 @@ export default {
     }
   },
   methods: {
-    changePwd(){
-
+    // 修改密码功能
+    changePwd () {
+      this.$http.post('/permit/user/modifyPassword',{
+        id: this.userId,
+        password: this.originPwd,
+        newPassword: this.newPwd2
+      }).then((res) => {
+        if(res.data === ''){
+          this.$message({
+            message: '密码修改成功',
+            type:'success'
+          })
+        }else {
+          this.$message({
+            message: '密码修改失败',
+            type:'warning'
+          })
+        }
+      })
+    },
+    // 输入框2失去焦点时判断输入密码是否一致
+    inputBlur () {
+      if(this.newPwd2 === '') {
+        return
+      }
+      if (this.newPwd === this.newPwd2) {
+        this.isPwdSame = true;
+      } else {
+        this.isPwdSame = false;
+      }
     }
   },
   created () {
@@ -244,7 +275,7 @@ export default {
   height: 40px;
   line-height: 40px;
   font-weight: bold;
-  padding-left:10%;
+  padding-left: 10%;
   font-size: 14px;
   text-align: right;
 }
