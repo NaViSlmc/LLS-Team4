@@ -7,13 +7,62 @@
           <p>考试管理</p>
           <span>贴合知识点 自动判卷 多维度统计</span>
         </div>
-        <img src="../../images/01.png" alt="" class='img1'>
+        <img src="../../images/01.png" alt class="img1" />
       </div>
     </div>
     <!-- 中间 -->
-    <div class='container'>
-        <el-tag>发布考试</el-tag>
-        <el-tag>考试管理</el-tag>
+
+    <!-- 按钮 -->
+    <div class="main" style="top:5px">
+      <el-row style="top:10px;left:5px;">
+        <el-button type="info">发布考试</el-button>
+        <el-button type="info">考试管理</el-button>
+      </el-row>
+      <el-tabs v-model="activeName" @tab-click="handleClick" style="margin-top:20px;">
+        <el-tab-pane label="大前端" name="first">
+          <el-tag type="success" style="margin-bottom:10px;margin-left:5px;">大前端</el-tag>
+
+          <el-table style="width: 100%" :data="data1">
+            <el-table-column label="名称" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="创建时间" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="备注" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.remark }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="试卷类型" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)"
+                >删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+
+        <el-tab-pane label="移动互联" name="second">移动互联</el-tab-pane>
+        <el-tab-pane label="软件开发" name="third">软件开发</el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
@@ -21,10 +70,38 @@
 export default {
   name: "MyExamination",
   data() {
-    return {};
+    return {
+      activeName: "first",
+      typeId: "1",
+      page: "1",
+      pageSize: "4",
+      data1: null
+    };
   },
-  methods: {},
-  created() {}
+  methods: {
+    handleClick(tab, event, row, index) {
+      console.log(tab, event);
+      console.log(row);
+    }
+  },
+
+  created() {
+    var app = this;
+    this.$http
+      .post("/exam/examPage/page", {
+        page: this.page, //当前第几页
+        pageSize: this.pageSize, //每页显示的条数
+        params: {
+          typeId: this.typeId //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
+        }
+      })
+      .then(function(res) {
+        console.log(res);
+        console.log(res.data.data);
+
+        app.data1 = res.data.data;
+      });
+  }
 };
 </script>
 <style lang="">
@@ -37,7 +114,7 @@ export default {
 .header-1 {
   width: 1280px;
   /* margin: 0 auto; */
-  margin-left:200px;
+  margin-left: 200px;
   overflow: hidden;
 }
 .header-2 {
@@ -62,11 +139,15 @@ export default {
 .img1 {
   float: right;
 }
-.container{
-  margin-left:50px;
+.main {
+  margin: 0 auto;
   background: bisque;
   /* width:100%; */
-  /* height:500px; */
+  height: 500px;
+  width: 90%;
+  margin-top: 10px;
 }
-
+.cell {
+  font-size: 20px;
+}
 </style>
