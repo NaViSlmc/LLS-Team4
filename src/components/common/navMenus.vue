@@ -52,10 +52,31 @@ export default {
   methods: {
     // 导航栏切换
     handleSelect (key) {
-      this.$router.push(`/teacher/${key}`);
+      // 当前要跳转的path不能等于当前path，否则会路由报错
+      if (`/teacher/${key}` !== this.$router.history.current.fullPath) {
+        this.$router.push(`/teacher/${key}`);
+      }
     },
+    // 用户退出
     userOut () {
-
+      try {
+        this.$http.get('/permit/logout').then((response) => {
+          if (response.data === '') {
+            this.$message({
+              message: `${this.userName} 退出成功`,
+              type: 'success'
+            });
+            // 清空localStorage
+            window.localStorage.removeItem('userId');
+            window.localStorage.removeItem('userName');
+            this.$router.push('/');
+          } else {
+            this.$message.error('退出失败')
+          }
+        })
+      } catch (err) {
+        this.$message.error('请检查您的网络')
+      }
     }
   },
   created () {

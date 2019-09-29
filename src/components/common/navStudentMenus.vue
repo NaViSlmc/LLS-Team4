@@ -10,10 +10,10 @@
         <div class="grid-content bg-purple">
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
             <el-menu-item index="MyMajorStudent">我的专业</el-menu-item>
-            <el-submenu index="2">
+            <el-submenu index="MyClass">
               <template slot="title">我的课程</template>
-              <el-menu-item index="2-1">选项1</el-menu-item>
-              <el-menu-item index="2-2">选项2</el-menu-item>
+              <el-menu-item index="MyClass">选项1</el-menu-item>
+              <el-menu-item index="MyClass">选项2</el-menu-item>
             </el-submenu>
             <el-menu-item index="MyGrow">我的成长</el-menu-item>
             <el-menu-item index="MyJoin">我的参与</el-menu-item>
@@ -25,12 +25,12 @@
         <div class="grid-content bg-purple">
           <ul class="loginUser">
             <li><span style="cursor:pointer;color:#A3A3A4;font-size:14px">
-                学生
+                {{ userName }}
               </span>
               <span class="ask_title">
                 在线提问
               </span>
-              <span style="cursor:pointer;color:#A3A3A4;font-size:14px;margin-left:15px">退出</span>
+              <span style="cursor:pointer;color:#A3A3A4;font-size:14px;margin-left:15px" @click="userOut">退出</span>
             </li>
           </ul>
         </div>
@@ -44,13 +44,42 @@ export default {
   name: 'navMenus',
   data () {
     return {
-      activeIndex: '1',
+      activeIndex: 'MyMajorStudent',
+      userName: '' // 用户名
     }
   },
   methods: {
-    handleSelect (key, keyPath) {
-      console.log(key, keyPath);
+    // 标签页切换
+    handleSelect (key) {
+      // 当前要跳转的path不能等于当前path，否则会路由报错
+      if (`/student/${key}` !== this.$router.history.current.fullPath) {
+        this.$router.push(`/student/${key}`);
+      }
+    },
+    // 用户退出
+    userOut () {
+      try {
+        this.$http.get('/permit/logout').then((response) => {
+          if (response.data === '') {
+            this.$message({
+              message: `${this.userName} 退出成功`,
+              type: 'success'
+            });
+            // 清空localStorage
+            window.localStorage.removeItem('userId');
+            window.localStorage.removeItem('userName');
+            this.$router.push('/');
+          } else {
+            this.$message.error('退出失败')
+          }
+        })
+      } catch (err) {
+        this.$message.error('请检查您的网络')
+      }
     }
+  },
+  created () {
+    this.userName = window.localStorage.getItem('userName'); // 从本地仓库拿到用户名
   }
 }
 </script>
