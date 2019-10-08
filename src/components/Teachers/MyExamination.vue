@@ -130,7 +130,7 @@
           </el-table>
         </el-tab-pane>
       </el-tabs>
-      <el-pagination @current-change="currentChange" background layout="prev, pager, next" :total="50" style='margin-top:10px;'></el-pagination>
+      <el-pagination @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
     </div>
   </div>
 </template>
@@ -145,23 +145,23 @@ export default {
       pageSize: "4",
       data1: null,
       data2: null,
-      data3: null
+      data3: null,
+      recordsTotal: 0
     };
   },
   methods: {
-    currentChange(val){
-        var app = this;
-      this.$http.post('/exam/examPage/page',{
-          pageSize: this.pageSize,
-          page: val
-      }).then(function(res){
+    // 切换页码功能
+    currentChange (val) {
+      var app = this;
+      this.$http.post('/exam/examPage/page', {
+        pageSize: this.pageSize,
+        page: val
+      }).then(function (res) {
         app.data1 = res.data.data;
-        console.log(res.data.data)
       })
     },
-    handleClick(tab, event, row, index) {
+    handleClick (tab, event, row, index) {
       var index = Number(tab.index) + 1;
-      console.log(index);
       if (index == 1) {
         var app = this;
         this.$http
@@ -173,9 +173,7 @@ export default {
             }
           })
           .then(function (res) {
-            console.log(res);
-            console.log(res.data.data);
-
+            app.recordsTotal = res.data.recordsTotal;
             app.data1 = res.data.data;
           });
       } else if (index == 2) {
@@ -189,9 +187,7 @@ export default {
             }
           })
           .then(function (res) {
-            console.log(res);
-            console.log(res.data.data);
-
+            app.recordsTotal = res.data.recordsTotal;
             app.data2 = res.data.data;
           });
       } else if (index == 3) {
@@ -205,23 +201,10 @@ export default {
             }
           })
           .then(function (res) {
-            console.log(res);
-            console.log(res.data.data);
-
+            app.recordsTotal = res.data.recordsTotal;
             app.data3 = res.data.data;
           });
       }
-    },
-    handleEdit() {
-      this.$http
-        .post("/business/examQuestionMark/pageDetail?id=1", {
-          createTime: this.createTime, //试卷创建时间
-          name: this.name, //试卷名称
-          remark: this.remark //备注
-        })
-        .then(function(res) {
-          console.log(res);
-        });
     }
   },
 
@@ -236,9 +219,7 @@ export default {
         }
       })
       .then(function (res) {
-        console.log(res);
-        console.log(res.data.data);
-
+        app.recordsTotal = res.data.recordsTotal;
         app.data1 = res.data.data;
       });
   }
