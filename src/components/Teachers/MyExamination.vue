@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <div class="header">
       <div class="header-1">
-        <div class="header-2">
+        <div class="header-2" style="margin-left:30px">
           <p>考试管理</p>
           <span>贴合知识点 自动判卷 多维度统计</span>
         </div>
@@ -15,10 +15,10 @@
     <!-- 按钮 -->
     <div class="main" style="top:5px">
       <el-row style="top:10px;left:5px;">
-        <el-button type="success">发布考试</el-button>
-        <el-button type="success">考试管理</el-button>
+        <el-button type="success" @click="routerPush('CreateExam')">发布考试</el-button>
+        <el-button type="primary" @click="routerPush('CreateExamPaper')">创建试卷</el-button>
       </el-row>
-      <el-tabs v-model="activeName" @tab-click="handleClick" style="margin-top:20px;">
+      <el-tabs v-model="activeName" @tab-click="handleClick" style="margin-top:20px;" type="border-card">
         <el-tab-pane label="大前端" name="first">
           <el-tag type="success" style="margin-bottom:10px;margin-left:5px;">大前端</el-tag>
 
@@ -54,6 +54,7 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
         </el-tab-pane>
 
         <el-tab-pane label="移动互联" name="second">
@@ -91,6 +92,7 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
         </el-tab-pane>
 
         <el-tab-pane label="软件开发" name="third">
@@ -128,9 +130,10 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
         </el-tab-pane>
       </el-tabs>
-      <el-pagination @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
+      
     </div>
   </div>
 </template>
@@ -146,10 +149,14 @@ export default {
       data1: null,
       data2: null,
       data3: null,
-      recordsTotal: 0
+      recordsTotal: 0 // 总条目数
     };
   },
   methods: {
+    // 按钮路由跳转功能
+    routerPush(route){
+      this.$router.push(route);
+    },
     // 切换页码功能
     currentChange (val) {
       var app = this;
@@ -225,7 +232,10 @@ export default {
   }
 };
 </script>
-<style lang="">
+<style>
+.el-tabs__nav {
+    margin-left: 0px;
+}
 .el-table td, .el-table th.is-leaf {
   text-align: center;
 }

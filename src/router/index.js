@@ -12,6 +12,8 @@ import MyStudents from '../components/Teachers/MyStudents.vue' // 学员管理
 import MyCourse from '../components/Teachers/MyCourse.vue' // 课程管理
 import MyContribution from '../components/Teachers/MyContribution.vue' // 我的贡献
 import MyData from '../components/Teachers/MyData.vue' // 个人资料
+import CreateExamPaper from '../components/Teachers/CreateExamPaper.vue' // 创建试卷
+import CreateExam from '../components/Teachers/CreateExam.vue' // 创建考试
 
 // ---------------------学生端----------------------
 import Shome from '../components/Students/Home.vue'
@@ -70,6 +72,16 @@ const routes = [
         path: 'MyData', // 个人资料
         component: MyData,
         name: 'MyData',
+      },
+      {
+        path: 'CreateExamPaper', // 创建试卷
+        component: CreateExamPaper,
+        name: 'CreateExamPaper',
+      },
+      {
+        path: 'CreateExam', // 创建考试
+        component: CreateExam,
+        name: 'CreateExam',
       },
     ]
   },
