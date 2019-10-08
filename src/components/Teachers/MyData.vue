@@ -188,17 +188,17 @@
           <div class="pwd_box">
             <div style="display:flex;margin-top:50px;">
               <div class="pwd_item">请输入原密码：</div>
-              <el-input placeholder="请输入内容" v-model="originPwd" clearable style="width:50%">
+              <el-input placeholder="请输入原密码" show-password v-model="originPwd" clearable style="width:50%">
               </el-input>
             </div>
             <div style="display:flex;margin-top:20px;">
               <div class="pwd_item">请输入新密码：</div>
-              <el-input placeholder="请输入新密码" show-password v-model="newPwd" clearable style="width:50%" @blur="inputBlur">
+              <el-input placeholder="请输入新密码" show-password v-model="newPwd" clearable style="width:50%" @input="inputBlur">
               </el-input>
             </div>
             <div style="display:flex;margin-top:20px;">
               <div class="pwd_item">请再次输入新密码：</div>
-              <el-input placeholder="请再次输入新密码：" show-password v-model="newPwd2" clearable style="width:50%" @blur="inputBlur">
+              <el-input placeholder="请再次输入新密码：" show-password v-model="newPwd2" clearable style="width:50%" @input="inputBlur">
               </el-input>
             </div>
             <div style="display:flex">
@@ -206,7 +206,7 @@
               <el-alert v-show="!isPwdSame" title="两次密码输入不一致" type="error" style="width:50%;padding:5px"></el-alert>
             </div>
             <div style="text-align:center;margin-top:20px">
-              <el-button style="width:150px" type="primary" @click="changePwd" :disabled="!isPwdSame">确认修改
+              <el-button style="width:150px" type="primary" @click="changePwd" :disabled="isPwdDefault||!isPwdSame">确认修改
               </el-button>
             </div>
           </div>
@@ -225,6 +225,7 @@ export default {
       newPwd: '',
       newPwd2: '',
       isPwdSame: true,
+      isPwdDefault:true,
       userData: null
     }
   },
@@ -243,7 +244,7 @@ export default {
           })
         }else {
           this.$message({
-            message: '密码修改失败',
+            message: res.data.msg,
             type:'warning'
           })
         }
@@ -254,11 +255,8 @@ export default {
       if(this.newPwd2 === '') {
         return
       }
-      if (this.newPwd === this.newPwd2) {
-        this.isPwdSame = true;
-      } else {
-        this.isPwdSame = false;
-      }
+      this.isPwdSame = this.newPwd===this.newPwd2;
+      this.isPwdDefault = false;
     }
   },
   created () {
