@@ -24,7 +24,7 @@
       <el-col :span="6">
         <div class="grid-content bg-purple">
           <ul class="loginUser">
-            <li><span style="cursor:pointer;color:#A3A3A4;font-size:14px">
+            <li><span style="cursor:pointer;color:#A3A3A4;font-size:14px" @click="toggUserData">
                 {{ userName }}
               </span>
               <span class="ask_title">
@@ -51,9 +51,9 @@ export default {
   methods: {
     // 用户详情页跳转
     toggUserData () {
-      if ('/teacher/MyData' !== this.$router.history.current.fullPath) {
+      if ('/student/MyDataStudent' !== this.$router.history.current.fullPath) {
         this.activeIndex = '';
-        this.$router.push('/teacher/MyData');
+        this.$router.push('/student/MyDataStudent');
       }
     },
     // 标签页切换
