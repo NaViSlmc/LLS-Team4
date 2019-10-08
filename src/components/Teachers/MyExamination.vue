@@ -50,11 +50,7 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看试卷</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                >删除</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -91,11 +87,7 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看试卷</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                >删除</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -132,11 +124,7 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看试卷</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)"
-                >删除</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -149,27 +137,27 @@
 <script>
 export default {
   name: "MyExamination",
-  data() {
+  data () {
     return {
       activeName: "first",
       typeId: "1",
       page: "1",
       pageSize: "4",
       data1: null,
-      data2:null,
-      data3:null
-      
-      
-      
+      data2: null,
+      data3: null
+
+
+
     };
   },
   methods: {
-    handleClick(tab, event, row, index) {
+    handleClick (tab, event, row, index) {
 
-      var index = Number(tab.index)+1;
+      var index = Number(tab.index) + 1;
       console.log(index);
-      if(index == 1){
-         var app = this;
+      if (index == 1) {
+        var app = this;
         this.$http
           .post("/exam/examPage/page", {
             page: this.page, //当前第几页
@@ -178,14 +166,14 @@ export default {
               typeId: index //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
             }
           })
-          .then(function(res) {
+          .then(function (res) {
             console.log(res);
             console.log(res.data.data);
 
             app.data1 = res.data.data;
           });
-      }else if(index == 2){
-          var app = this;
+      } else if (index == 2) {
+        var app = this;
         this.$http
           .post("/exam/examPage/page", {
             page: this.page, //当前第几页
@@ -194,14 +182,14 @@ export default {
               typeId: index //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
             }
           })
-          .then(function(res) {
+          .then(function (res) {
             console.log(res);
             console.log(res.data.data);
 
             app.data2 = res.data.data;
           });
-      }else if(index == 3){
-          var app = this;
+      } else if (index == 3) {
+        var app = this;
         this.$http
           .post("/exam/examPage/page", {
             page: this.page, //当前第几页
@@ -210,29 +198,29 @@ export default {
               typeId: index //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
             }
           })
-          .then(function(res) {
+          .then(function (res) {
             console.log(res);
             console.log(res.data.data);
 
             app.data3 = res.data.data;
           });
       }
-     
+
 
     },
-    handleEdit(){
-      this.$http.post('/business/examQuestionMark/pageDetail?id=1',{
-        createTime : this.createTime, //试卷创建时间
-        name : this.name, //试卷名称
-        remark : this.remark //备注
-    }).then(function(res){
-      console.log(res)
-    })
+    handleEdit () {
+      this.$http.post('/business/examQuestionMark/pageDetail?id=1', {
+        createTime: this.createTime, //试卷创建时间
+        name: this.name, //试卷名称
+        remark: this.remark //备注
+      }).then(function (res) {
+        console.log(res)
+      })
 
-  }
+    }
   },
 
-  created() {
+  created () {
     var app = this;
     this.$http
       .post("/exam/examPage/page", {
@@ -242,7 +230,7 @@ export default {
           typeId: this.typeId //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
         }
       })
-      .then(function(res) {
+      .then(function (res) {
         console.log(res);
         console.log(res.data.data);
 
