@@ -49,7 +49,7 @@
 
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看试卷</el-button>
                 <el-button
                   size="mini"
                   type="danger"
@@ -60,9 +60,89 @@
           </el-table>
         </el-tab-pane>
 
-        <el-tab-pane label="移动互联" name="second">移动互联</el-tab-pane>
-        <el-tab-pane label="软件开发" name="third">软件开发</el-tab-pane>
+        <el-tab-pane label="移动互联" name="second">
+          <el-tag type="success" style="margin-bottom:10px;margin-left:5px;">移动互联</el-tag>
+
+          <el-table style="width: 100%" :data="data2">
+            <el-table-column label="名称" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="创建时间" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="备注" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.remark }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="试卷类型" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看试卷</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)"
+                >删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+
+        <el-tab-pane label="软件开发" name="third">
+          <el-tag type="success" style="margin-bottom:10px;margin-left:5px;">软件开发</el-tag>
+
+          <el-table style="width: 100%" :data="data3">
+            <el-table-column label="名称" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="创建时间" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="备注" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.remark }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="试卷类型" width="370">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看试卷</el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)"
+                >删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
       </el-tabs>
+
     </div>
   </div>
 </template>
@@ -75,14 +155,81 @@ export default {
       typeId: "1",
       page: "1",
       pageSize: "4",
-      data1: null
+      data1: null,
+      data2:null,
+      data3:null
+      
+      
+      
     };
   },
   methods: {
     handleClick(tab, event, row, index) {
-      console.log(tab, event);
-      console.log(row);
-    }
+
+      var index = Number(tab.index)+1;
+      console.log(index);
+      if(index == 1){
+         var app = this;
+        this.$http
+          .post("/exam/examPage/page", {
+            page: this.page, //当前第几页
+            pageSize: this.pageSize, //每页显示的条数
+            params: {
+              typeId: index //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
+            }
+          })
+          .then(function(res) {
+            console.log(res);
+            console.log(res.data.data);
+
+            app.data1 = res.data.data;
+          });
+      }else if(index == 2){
+          var app = this;
+        this.$http
+          .post("/exam/examPage/page", {
+            page: this.page, //当前第几页
+            pageSize: this.pageSize, //每页显示的条数
+            params: {
+              typeId: index //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
+            }
+          })
+          .then(function(res) {
+            console.log(res);
+            console.log(res.data.data);
+
+            app.data2 = res.data.data;
+          });
+      }else if(index == 3){
+          var app = this;
+        this.$http
+          .post("/exam/examPage/page", {
+            page: this.page, //当前第几页
+            pageSize: this.pageSize, //每页显示的条数
+            params: {
+              typeId: index //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
+            }
+          })
+          .then(function(res) {
+            console.log(res);
+            console.log(res.data.data);
+
+            app.data3 = res.data.data;
+          });
+      }
+     
+
+    },
+    handleEdit(){
+      this.$http.post('/business/examQuestionMark/pageDetail?id=1',{
+        createTime : this.createTime, //试卷创建时间
+        name : this.name, //试卷名称
+        remark : this.remark //备注
+    }).then(function(res){
+      console.log(res)
+    })
+
+  }
   },
 
   created() {
@@ -102,7 +249,7 @@ export default {
         app.data1 = res.data.data;
       });
   }
-};
+}
 </script>
 <style lang="">
 .header {
@@ -141,7 +288,7 @@ export default {
 }
 .main {
   margin: 0 auto;
-  background: bisque;
+  /* background: bisque; */
   /* width:100%; */
   height: 500px;
   width: 90%;
