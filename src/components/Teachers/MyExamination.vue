@@ -15,33 +15,33 @@
     <!-- 按钮 -->
     <div class="main" style="top:5px">
       <el-row style="top:10px;left:5px;">
-        <el-button type="info">发布考试</el-button>
-        <el-button type="info">考试管理</el-button>
+        <el-button type="success">发布考试</el-button>
+        <el-button type="success">考试管理</el-button>
       </el-row>
       <el-tabs v-model="activeName" @tab-click="handleClick" style="margin-top:20px;">
         <el-tab-pane label="大前端" name="first">
           <el-tag type="success" style="margin-bottom:10px;margin-left:5px;">大前端</el-tag>
 
           <el-table style="width: 100%" :data="data1">
-            <el-table-column label="名称" width="370">
+            <el-table-column label="名称" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.name }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="创建时间" width="370">
+            <el-table-column label="创建时间" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="备注" width="370">
+            <el-table-column label="备注" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.remark }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="试卷类型" width="370">
+            <el-table-column label="试卷类型" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
               </template>
@@ -64,25 +64,25 @@
           <el-tag type="success" style="margin-bottom:10px;margin-left:5px;">移动互联</el-tag>
 
           <el-table style="width: 100%" :data="data2">
-            <el-table-column label="名称" width="370">
+            <el-table-column label="名称" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.name }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="创建时间" width="370">
+            <el-table-column label="创建时间" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="备注" width="370">
+            <el-table-column label="备注" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.remark }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="试卷类型" width="370">
+            <el-table-column label="试卷类型" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
               </template>
@@ -105,25 +105,25 @@
           <el-tag type="success" style="margin-bottom:10px;margin-left:5px;">软件开发</el-tag>
 
           <el-table style="width: 100%" :data="data3">
-            <el-table-column label="名称" width="370">
+            <el-table-column label="名称" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.name }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="创建时间" width="370">
+            <el-table-column label="创建时间" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="备注" width="370">
+            <el-table-column label="备注" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.remark }}</span>
               </template>
             </el-table-column>
 
-            <el-table-column label="试卷类型" width="370">
+            <el-table-column label="试卷类型" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.typeName }}</span>
               </template>
@@ -142,7 +142,7 @@
           </el-table>
         </el-tab-pane>
       </el-tabs>
-
+      <el-pagination @current-change="currentChange" background layout="prev, pager, next" :total="50" style='margin-top:10px;'></el-pagination>
     </div>
   </div>
 </template>
@@ -156,20 +156,26 @@ export default {
       page: "1",
       pageSize: "4",
       data1: null,
-      data2:null,
-      data3:null
-      
-      
-      
+      data2: null,
+      data3: null
     };
   },
   methods: {
+    currentChange(val){
+        var app = this;
+      this.$http.post('/exam/examPage/page',{
+          pageSize: this.pageSize,
+          page: val
+      }).then(function(res){
+        app.data1 = res.data.data;
+        console.log(res.data.data)
+      })
+    },
     handleClick(tab, event, row, index) {
-
-      var index = Number(tab.index)+1;
+      var index = Number(tab.index) + 1;
       console.log(index);
-      if(index == 1){
-         var app = this;
+      if (index == 1) {
+        var app = this;
         this.$http
           .post("/exam/examPage/page", {
             page: this.page, //当前第几页
@@ -184,8 +190,8 @@ export default {
 
             app.data1 = res.data.data;
           });
-      }else if(index == 2){
-          var app = this;
+      } else if (index == 2) {
+        var app = this;
         this.$http
           .post("/exam/examPage/page", {
             page: this.page, //当前第几页
@@ -200,8 +206,8 @@ export default {
 
             app.data2 = res.data.data;
           });
-      }else if(index == 3){
-          var app = this;
+      } else if (index == 3) {
+        var app = this;
         this.$http
           .post("/exam/examPage/page", {
             page: this.page, //当前第几页
@@ -217,19 +223,18 @@ export default {
             app.data3 = res.data.data;
           });
       }
-     
-
     },
-    handleEdit(){
-      this.$http.post('/business/examQuestionMark/pageDetail?id=1',{
-        createTime : this.createTime, //试卷创建时间
-        name : this.name, //试卷名称
-        remark : this.remark //备注
-    }).then(function(res){
-      console.log(res)
-    })
-
-  }
+    handleEdit() {
+      this.$http
+        .post("/business/examQuestionMark/pageDetail?id=1", {
+          createTime: this.createTime, //试卷创建时间
+          name: this.name, //试卷名称
+          remark: this.remark //备注
+        })
+        .then(function(res) {
+          console.log(res);
+        });
+    }
   },
 
   created() {
@@ -249,7 +254,7 @@ export default {
         app.data1 = res.data.data;
       });
   }
-}
+};
 </script>
 <style lang="">
 .header {
@@ -295,6 +300,6 @@ export default {
   margin-top: 10px;
 }
 .cell {
-  font-size: 20px;
+  font-size: 13px;
 }
 </style>
