@@ -103,7 +103,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="创建时间" width="250">
+            <el-table-column label="创建时间" width="240">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
               </template>
@@ -111,7 +111,7 @@
 
             <el-table-column label="备注" width="250">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.remark }}</span>
+                <span>{{ scope.row.remark }}</span>
               </template>
             </el-table-column>
 
@@ -226,6 +226,9 @@ export default {
 };
 </script>
 <style lang="">
+.el-table td, .el-table th.is-leaf {
+  text-align: center;
+}
 .header {
   width: 100%;
   height: 144px;
