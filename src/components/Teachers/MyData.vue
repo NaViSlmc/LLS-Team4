@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="myData">
     <!-- 标题 -->
     <div class="sprotitleBody">
       <div class="sprotitlebackground">
@@ -330,7 +330,7 @@ export default {
   font-size: 18px;
   color: #606060;
 }
-.el-tabs__nav {
+.myData .el-tabs__nav {
   margin-left: 210px;
 }
 .sprotitleBody {

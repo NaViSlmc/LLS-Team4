@@ -105,7 +105,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="创建时间" width="240">
+            <el-table-column label="创建时间" width="250">
               <template slot-scope="scope">
                 <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
               </template>
@@ -233,9 +233,6 @@ export default {
 };
 </script>
 <style>
-.el-tabs__nav {
-    margin-left: 0px;
-}
 .el-table td, .el-table th.is-leaf {
   text-align: center;
 }
