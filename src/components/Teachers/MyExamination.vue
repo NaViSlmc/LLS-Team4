@@ -54,7 +54,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
+          <el-pagination hide-on-single-page :key="1" :current-page="+page1" @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
         </el-tab-pane>
 
         <el-tab-pane label="移动互联" name="second">
@@ -92,7 +92,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
+          <el-pagination hide-on-single-page :key="2" :current-page="+page2" @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
         </el-tab-pane>
 
         <el-tab-pane label="软件开发" name="third">
@@ -130,7 +130,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
+          <el-pagination hide-on-single-page :key="3" :current-page="+page3"	 @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
         </el-tab-pane>
       </el-tabs>
       
@@ -144,12 +144,15 @@ export default {
     return {
       activeName: "first",
       typeId: "1",
-      page: "1",
+      page1: "1",
+      page2: "1",
+      page3: "1",
       pageSize: "4",
       data1: null,
       data2: null,
       data3: null,
-      recordsTotal: 0 // 总条目数
+      recordsTotal: 0, // 总条目数
+      index: 1
     };
   },
   methods: {
@@ -159,21 +162,27 @@ export default {
     },
     // 切换页码功能
     currentChange (val) {
+      // console.log(val)
       var app = this;
+      this[`page${app.index}`] = val;
       this.$http.post('/exam/examPage/page', {
         pageSize: this.pageSize,
-        page: val
+        page: val,
+        params: {
+          typeId: this.index
+        }
       }).then(function (res) {
-        app.data1 = res.data.data;
+        app[`data${app.index}`] = res.data.data;
       })
     },
     handleClick (tab, event, row, index) {
       var index = Number(tab.index) + 1;
+      this.index = index;
       if (index == 1) {
         var app = this;
         this.$http
           .post("/exam/examPage/page", {
-            page: this.page, //当前第几页
+            page: this.page1, //当前第几页
             pageSize: this.pageSize, //每页显示的条数
             params: {
               typeId: index //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
@@ -187,7 +196,7 @@ export default {
         var app = this;
         this.$http
           .post("/exam/examPage/page", {
-            page: this.page, //当前第几页
+            page: this.page2, //当前第几页
             pageSize: this.pageSize, //每页显示的条数
             params: {
               typeId: index //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
@@ -201,7 +210,7 @@ export default {
         var app = this;
         this.$http
           .post("/exam/examPage/page", {
-            page: this.page, //当前第几页
+            page: this.page3, //当前第几页
             pageSize: this.pageSize, //每页显示的条数
             params: {
               typeId: index //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
@@ -219,7 +228,7 @@ export default {
     var app = this;
     this.$http
       .post("/exam/examPage/page", {
-        page: this.page, //当前第几页
+        page: this.page1, //当前第几页
         pageSize: this.pageSize, //每页显示的条数
         params: {
           typeId: this.typeId //试卷类型 typeId  1为大前端  2是移动互联 3是软件开发
