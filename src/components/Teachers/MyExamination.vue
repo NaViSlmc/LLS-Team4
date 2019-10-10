@@ -130,7 +130,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination hide-on-single-page :key="3" :current-page="+page3"	 @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
+          <el-pagination hide-on-single-page :key="3" :current-page="+page3" @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style='margin-top:10px;'></el-pagination>
         </el-tab-pane>
       </el-tabs>
       

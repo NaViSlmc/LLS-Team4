@@ -1,9 +1,6 @@
 <template>
   <div class="CreateExam">
-    <div
-      class="HeadMasterTitle_box"
-      style="background-color: rgb(238, 82, 108); background-image: linear-gradient(45deg, rgb(238, 82, 108) 0%, rgb(238, 82, 108) 1%, rgb(243, 106, 128) 100%);"
-    >
+    <div class="HeadMasterTitle_box" style="background-color: rgb(238, 82, 108); background-image: linear-gradient(45deg, rgb(238, 82, 108) 0%, rgb(238, 82, 108) 1%, rgb(243, 106, 128) 100%);">
       <div class="HeadMasterTitle_wrap">
         <div class="HeadMasterTitle_msg" style="margin-left: 110px;">
           <span style="margin-top: 40px;">发布考试</span>
@@ -18,7 +15,7 @@
       <el-row>
         <el-col :span="2">考试名称</el-col>
         <el-col :span="4">
-          <el-input placeholder="请输入考试名称"></el-input>
+          <el-input placeholder="请输入考试名称" v-model="examName"></el-input>
         </el-col>
       </el-row>
 
@@ -27,13 +24,8 @@
         <!-- 选择班级 -->
         <el-col :span="2">选择班级</el-col>
         <el-col :span="4">
-          <el-select v-model="value" clearable placeholder="请选择考试班级">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
+          <el-select v-model="optionsDataDefault" placeholder="请选择考试班级">
+            <el-option v-for="item in optionsData" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-col>
       </el-row>
@@ -42,8 +34,8 @@
       <el-row>
         <!-- 考试时长 -->
         <el-col :span="2">考试时长</el-col>
-        <el-col :span="1">
-          <el-input>0</el-input>
+        <el-col :span="3">
+          <el-input-number controls-position="right" size="mini" v-model="examTime" :min="1"></el-input-number>
         </el-col>
         <el-col :span="1" style="margin-left:5px;">
           <el-tag type="success">分钟</el-tag>
@@ -57,7 +49,7 @@
           <span class="demonstration">开始时间</span>
         </el-col>
         <el-col :span="3">
-          <el-date-picker v-model="value1" type="datetime" placeholder="选择日期时间"></el-date-picker>
+          <el-date-picker v-model="dateValue" type="datetime" placeholder="选择日期时间"></el-date-picker>
         </el-col>
       </el-row>
 
@@ -66,10 +58,7 @@
         <!-- 考试类型 -->
         <el-col :span="2">考试类型</el-col>
         <el-col :span="10">
-          <el-radio v-model="radio" label="1">每日一练</el-radio>
-          <el-radio v-model="radio" label="2">每周一测</el-radio>
-          <el-radio v-model="radio" label="3">每月一考</el-radio>
-          <el-radio v-model="radio" label="4">期末考试</el-radio>
+          <el-radio v-for="(item,index) in examTypeList" :key="index" v-model="examType" :label="item.id">{{ item.name }}</el-radio>
         </el-col>
       </el-row>
 
@@ -79,17 +68,20 @@
         </el-col>
       </el-row>
 
-      <el-table ref="multipleTable" tooltip-effect="dark" style="width: 100%" :data="data1">
-        <el-table-column type="selection" width="55"></el-table-column>
+      <el-table ref="multipleTable" @current-change="handleCurrentChange" highlight-current-row tooltip-effect="dark" style="width: 100%" :data="data1" v-if="data1">
+        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column label="试卷" width="300" prop="name"></el-table-column>
         <el-table-column prop="typeName" label="专业分类" width="120"></el-table-column>
         <el-table-column prop="remark" label="备注信息" width="425"></el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="300"></el-table-column>
       </el-table>
-
       <el-row>
         <el-col>
-          <el-button type="primary" plain>创建考试</el-button>
+          <el-pagination background layout="prev, pager, next" @current-change="currentChange" :page-size="+pageSize" :total="recordsTotal">
+          </el-pagination>
+        </el-col>
+        <el-col>
+          <el-button type="primary" plain @click="createdExam">创建考试</el-button>
         </el-col>
       </el-row>
     </div>
@@ -98,21 +90,20 @@
 <script>
 export default {
   name: "CreateExam",
-  data() {
+  data () {
     return {
-      radio: "1",
       // 时间
       pickerOptions: {
         shortcuts: [
           {
             text: "今天",
-            onClick(picker) {
+            onClick (picker) {
               picker.$emit("pick", new Date());
             }
           },
           {
             text: "昨天",
-            onClick(picker) {
+            onClick (picker) {
               const date = new Date();
               date.setTime(date.getTime() - 3600 * 1000 * 24);
               picker.$emit("pick", date);
@@ -120,7 +111,7 @@ export default {
           },
           {
             text: "一周前",
-            onClick(picker) {
+            onClick (picker) {
               const date = new Date();
               date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
               picker.$emit("pick", date);
@@ -128,48 +119,93 @@ export default {
           }
         ]
       },
-      value1: "",
-      page:'1',//页数
-      pageSize:'4', //每页显示数量
-      data1:'', //表格内容
-      userId:'',
-      label:null,
-      value:''
+      selectedExamId:'', // 选中的要关联试卷id
+      examName: '', // 考试名称
+      examTime: '', // 考试时长
+      examType: 1, // 考试类型
+      examTypeList: [], // 考试类型列表
+      dateValue: "", // 开考时间
+      page: '1',//页数
+      pageSize: '4', //每页显示数量
+      data1: null, //表格内容
+      userId: '', // 老师Id
+      optionsData: null, // 所有所教班级
+      optionsDataDefault: '', // 选中的班级id
+      recordsTotal: 0 // 表格条目数
     };
   },
   methods: {
+    // 创建考试
+    createdExam(){
+      var startTime = new Date(this.dateValue).getTime();
+      this.$http.post('/business/examPlan/save',{
+        classId: this.optionsDataDefault,
+        duration: this.examTime+'',
+        examPageId: this.selectedExamId,
+        isMultipleSubmission: 'N',
+        name: this.examName,
+        startTime,
+        typeId: this.examType
+      }).then((res) => {
+        if(res.data === '') {
+          this.$message({
+            message: '创建考试成功',
+            type: 'success'
+          })
+        }else {
+          this.$message({
+            message: '创建考试失败',
+            type: 'warning'
+          })
+        }
+      })
     },
-  created() {
+    // 表格单选
+    handleCurrentChange(currentRow, oldCurrentRow) {
+      this.selectedExamId = currentRow?currentRow.id:oldCurrentRow.id;
+      console.log(currentRow)
+      console.log(oldCurrentRow)
+    },
+    // 切换页码功能
+    currentChange (val) {
+      this.$http.post('/exam/examPage/page', {
+        page: val, //  当前页
+        pageSize: this.pageSize, //每一页显示条数
+        params: {
+          typeId: null //typeId 试卷类型id 默认传nulll 获取所有的
+        }
+      }).then((res) => {
+        this.data1 = res.data.data;
+      })
+    }
+  },
+  created () {
     this.userId = window.localStorage.getItem('userId')
     var app = this;
-      // 获取试卷集合
-      this.$http
-        .post("/exam/examPage/page", {
-          page: this.page, //  当前页
-          pageSize: this.pageSize, //每一页显示条数
-          params: {
-            typeId: null //typeId 试卷类型id 默认传nulll 获取所有的
-          }
-        })
-        .then(function(res) {
-          app.data1 = res.data.data;
-        });
-
-        // 获取考试类型
-      this.$http.get('/business/examType/listAll',{
-
-      }).then(function(res){
-          
-        // console.log(res)
+    // 获取试卷集合
+    this.$http
+      .post("/exam/examPage/page", {
+        page: this.page, //  当前页
+        pageSize: this.pageSize, //每一页显示条数
+        params: {
+          typeId: null //typeId 试卷类型id 默认传nulll 获取所有的
+        }
+      })
+      .then(function (res) {
+        app.data1 = res.data.data;
+        app.recordsTotal = res.data.recordsTotal;
       });
-      
-      // 获取老师带过的班级
-      this.$http.get('/business/organClassUser/currentClassListByTeacherId/'+app.userId,{
-          
-      }).then(function(res){
-        app.label = res.data
-        console.log(res.data)
-      });
+
+
+
+    // 获取考试类型
+    this.$http.get('/business/examType/listAll').then((res) => {
+      this.examTypeList = res.data;
+    });
+    // 获取老师带过的班级
+    this.$http.get('/business/organClassUser/currentClassListByTeacherId/' + this.userId).then((res) => {
+      this.optionsData = res.data;
+    });
   }
 };
 </script>
