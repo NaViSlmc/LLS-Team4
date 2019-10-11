@@ -121,7 +121,7 @@ export default {
       },
       selectedExamId:'', // 选中的要关联试卷id
       examName: '', // 考试名称
-      examTime: '', // 考试时长
+      examTime: '1', // 考试时长
       examType: 1, // 考试类型
       examTypeList: [], // 考试类型列表
       dateValue: "", // 开考时间
@@ -137,6 +137,37 @@ export default {
   methods: {
     // 创建考试
     createdExam(){
+      switch ('') {
+        case this.examName:
+          this.$message({
+            message: '请输入考试名称',
+            type: 'warning'
+          });
+          return 
+          break;
+        case this.optionsDataDefault:
+          this.$message({
+            message: '请选择要考试的班级',
+            type: 'warning'
+          });
+          return 
+          break;
+        case this.dateValue:
+          this.$message({
+            message: '请选择开考时间',
+            type: 'warning'
+          });
+          return 
+          break;
+        case this.selectedExamId:
+          this.$message({
+            message: '请选择要考试的试卷',
+            type: 'warning'
+          });
+          return 
+          break;
+      }
+      // 时间格式处理
       var startTime = new Date(this.dateValue).getTime();
       this.$http.post('/business/examPlan/save',{
         classId: this.optionsDataDefault,
@@ -151,7 +182,8 @@ export default {
           this.$message({
             message: '创建考试成功',
             type: 'success'
-          })
+          });
+          this.$router.push('MyExamination');
         }else {
           this.$message({
             message: '创建考试失败',
@@ -163,8 +195,8 @@ export default {
     // 表格单选
     handleCurrentChange(currentRow, oldCurrentRow) {
       this.selectedExamId = currentRow?currentRow.id:oldCurrentRow.id;
-      console.log(currentRow)
-      console.log(oldCurrentRow)
+      // console.log(currentRow)
+      // console.log(oldCurrentRow)
     },
     // 切换页码功能
     currentChange (val) {
