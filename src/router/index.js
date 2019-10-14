@@ -14,6 +14,7 @@ import MyContribution from '../components/Teachers/MyContribution.vue' // 我的
 import MyData from '../components/Teachers/MyData.vue' // 个人资料
 import CreateExamPaper from '../components/Teachers/CreateExamPaper.vue' // 创建试卷
 import CreateExam from '../components/Teachers/CreateExam.vue' // 创建考试
+import SeeExam from '../components/Teachers/SeeExam.vue' // 查看试卷
 
 // ---------------------学生端----------------------
 import Shome from '../components/Students/Home.vue'
@@ -33,6 +34,11 @@ const routes = [
   {
     path: '/logined',
     component: Logined
+  },
+  {
+    path: '/SeeExam', // 创建考试
+    component: SeeExam,
+    name: 'SeeExam',
   },
   {
     path: '/teacher', // 教师端主页面
@@ -83,6 +89,7 @@ const routes = [
         component: CreateExam,
         name: 'CreateExam',
       },
+      
     ]
   },
   {
