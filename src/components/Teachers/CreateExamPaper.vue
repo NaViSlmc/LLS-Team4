@@ -66,7 +66,7 @@
       <!-- 选择题内容输入区 -->
       <el-row v-for="(item,index) in radioList" :key="index">
         <el-col :span="2">
-          <el-radio v-model="radioCorrect" :label="item.tit">
+          <el-radio @change="handleClickRadio" v-model="radioCorrect" :label="item.tit">
             <el-tag type="primary" effect="plain">{{item.tit}}</el-tag>
           </el-radio>
         </el-col>
@@ -105,6 +105,13 @@ export default {
     }
   },
   methods: {
+    // 单选按钮单击，更改对应tag样式功能
+    handleClickRadio(val){
+      var tags = document.querySelectorAll('.el-radio .el-tag');
+      ['A','B','C','D'].map((item,index) => {
+        val==item?tags[index].className = 'el-tag el-tag--primary el-tag--dark':tags[index].className = 'el-tag el-tag--primary el-tag--plain';
+      })
+    },
     // 添加试卷
     pushExamPaper () {
       if (this.examPaperTit === '') {
@@ -128,7 +135,7 @@ export default {
         },
         list: this.examPaperList
       }).then((response) => {
-        console.log(response)
+        // console.log(response)
         if (response.status === 200 && typeof response.data === 'string') {
           this.$message({
             message: '试卷保存成功',

@@ -126,7 +126,7 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看试卷</el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -156,6 +156,14 @@ export default {
     };
   },
   methods: {
+    // 删除试卷功能
+    handleDelete(index,item) { // index为当前组件在当前页的下标  // item为该组件内容
+      // 查看试卷是否被关联 
+      console.log(item.id)
+      this.$http.get(`/business/examPlan/paperStatus/`+item.id).then((res) => {
+        console.log(res)
+      })
+    },
     // 按钮路由跳转功能
     routerPush(route){
       this.$router.push(route);
