@@ -1,7 +1,7 @@
 <template>
   <div class="SeeExam">
     <el-container>
-      <el-header class="top" style="height:80px;">
+      <el-header class="top">
         <!-- 基本资料 -->
         <div class="top1">
           <!-- 头部左边 -->
@@ -38,49 +38,23 @@
           </div>
 
           <!-- 题 -->
-          <div class="ti">
-            <div class="ti-1">
-              <!-- 题目详情 -->
-              <div class="ti1">
-
-                <!-- 题目内容 -->
-                <div class="ti1-center">
-                <!-- 第几个题 -->
-                  <div class="ti1-left">
-                    <div style="font-weight:bold">1/10</div>
-                  </div>
-                  <div class="ti1-center-1">WXML与HTML完全一模一样，WXSS与CSS也是完全一模一样，没有做任何改变。这句话是（ ）的。</div>
-                   <div style="clear:both;height:0;"></div>
-                  <div class="ti1-center-2">
-                    <span>已选</span>
-                    <span class="xuanxiangstyle"></span>
-                    <span>选项</span>
-                  </div>
-                 
-                <!-- 题目分数 -->
-                  <div class="ti1-right">
-                  <span class="rightScore">
-                    <i class="display:inline-block">得分 : 加2分</i>
-                  </span>
+          <div class="dx_item">
+            <div class="dx_l">
+              <div class="dx_l_l">
+                <i class="el-icon-check" style="color:#4ac0e0;font-weight:bold;font-size:20px;"></i>
+                <span style="font-weight:bold;"><span style="font-size:20px">01</span>/10</span>
+              </div>
+              <div class="dx_l_r">
+                <div class="r_top">
+                  （ ）可理解为依附在微信上的app，它的优点是应用无处不在，随时可用，又无需安装和卸载。而（ ）偏重为用户传递资讯，类似报纸杂志。
                 </div>
+                <div class="r_bottom">
+                  已选B选项
                 </div>
               </div>
-              <!-- 选项 -->
-              <div class="ti2">
-                <el-row>
-                  <el-radio v-model="radio" label="1">A &nbsp; &nbsp;正确</el-radio>
-                </el-row>
-                <el-row>
-                  <el-radio v-model="radio" label="2">B &nbsp; &nbsp;错误</el-radio>
-                </el-row>
-              </div>
-              <!-- 正确答案 -->
-              <div class="ti3">
-                <span class="ti3-1">
-                  正确答案：
-                  <span>A</span>
-                </span>
-              </div>
+            </div>
+            <div class="dx_r">
+              <i>得分 : 加2分</i>
             </div>
           </div>
         </div>
@@ -91,18 +65,61 @@
 <script>
 export default {
   name: "SeeExam",
-  data() {
+  data () {
     return {};
   },
   methods: {},
-  created() {
+  created () {
     console.log("a");
   }
 };
 </script>
 <style>
+.dx_r i {
+  font-style:normal;
+  display: inline-block;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  color:#ff7245;
+}
+.dx_item {
+  overflow: hidden;
+  position: relative;
+  margin-top: 5px;
+  background:#f5f5f5;
+  padding:5px;
+  box-sizing: border-box;
+}
+.dx_r {
+  width: 15%;
+  height: 100%;
+  float: left;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center;
+  vertical-align: middle;
+  background:#fcd6cb;
+}
+.dx_l {
+  overflow: hidden;
+  width: 85%;
+  float: left;
+}
+.dx_l_r {
+  float: left;
+  width: 90%;
+  box-sizing: border-box;
+  line-height:28px;
+}
+.dx_l_l {
+  float: left;
+  width: 10%;
+}
 .SeeExam .top {
   background: black;
+  height: 80px !important;
 }
 .SeeExam .top1 {
   width: 55%;
@@ -180,83 +197,5 @@ export default {
 }
 .danxuan1 i {
   font-size: 10px;
-}
-.main .ti {
-  margin-top: 30px;
-}
-.ti-1 {
-  margin-left: 2.5%;
-  margin-top: 15px;
-  height: 80%;
-  width: 95%;
-}
-.ti .ti1 {
-  /* background: chartreuse; */
-  height: 23%;
-  overflow: hidden;
-}
-.ti1-left {
-  text-align: center;
-  background: #f5f5f5;
-  float: left;
-  width: 8%;
-}
-.ti1-center {
-  width: 81%;
-  float: left;
-  background: #f5f5f5;
-  height: 100%;
-  padding: 5px;
-  box-sizing: border-box;
-}
-.ti1-center-1 {
-  /* margin-left: 15px; */
-  float: left;
-  width: 90%;
-}
-.ti1-center-2 {
-  margin-top: 10px;
-  margin-left: 8%;
-  width: 100%;
-}
-.xuanxiangstyle {
-  text-align: center;
-  line-height: 15px;
-  margin-bottom: -3px;
-  padding-left: 0px;
-  width: 73px;
-  display: inline-block;
-  border-bottom: 1px solid black;
-}
-.ti1-right {
-  height: 100%;
-  width: 14%;
-  float: left;
-}
-.rightScore {
-  float: left;
-  background: #fcd6cb;
-  color: #ff7245;
-  width: 100%;
-  text-align: center;
-  /* line-height: 90px; */
-}
-
-.ti2 {
-  margin-left: 10%;
-}
-.ti2 .el-radio {
-  margin-top: 10px;
-}
-.ti3 {
-  width: 100%;
-  background: #ebf9fc;
-  margin-top: 20px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  color: #4ac1e1;
-}
-.ti3-1 {
-  margin-left: 10%;
 }
 </style>

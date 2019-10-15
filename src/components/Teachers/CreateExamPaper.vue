@@ -106,10 +106,10 @@ export default {
   },
   methods: {
     // 单选按钮单击，更改对应tag样式功能
-    handleClickRadio(val){
+    handleClickRadio (val) {
       var tags = document.querySelectorAll('.el-radio .el-tag');
-      ['A','B','C','D'].map((item,index) => {
-        val==item?tags[index].className = 'el-tag el-tag--primary el-tag--dark':tags[index].className = 'el-tag el-tag--primary el-tag--plain';
+      ['A', 'B', 'C', 'D'].map((item, index) => {
+        val == item ? tags[index].className = 'el-tag el-tag--primary el-tag--dark' : tags[index].className = 'el-tag el-tag--primary el-tag--plain';
       })
     },
     // 添加试卷
@@ -210,7 +210,12 @@ export default {
         this.radioList[3].cont,
         this.minute,
         this.titContent
-      ] = ['','1','','','','','1',''];
+      ] = ['', '1', '', '', '', '', '1', ''];
+      // 消除tag样式
+      var tags = document.querySelectorAll('.el-radio .el-tag');
+      Array.prototype.map.call(tags,(item, index) => {
+        tags[index].className = 'el-tag el-tag--primary el-tag--plain';
+      })
     }
   },
   created () {
@@ -223,6 +228,10 @@ export default {
   line-height: 40px;
   text-align: left;
   margin-top: 10px;
+}
+.CreateExamPaper .el-input--mini .el-input__inner {
+  height: 32px;
+  line-height: 32px;
 }
 .basic_data {
   width: 1200px;
