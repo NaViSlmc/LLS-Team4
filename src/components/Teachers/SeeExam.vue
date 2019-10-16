@@ -100,6 +100,30 @@ export default {
 };
 </script>
 <style>
+.xuanxiangStyle{
+text-align: center;
+line-height: 15px;
+margin-bottom: -3px;
+padding-left: 0px;
+width: 73px;
+display: inline-block;
+border-bottom: 1px solid black;
+}
+.ti2 {
+margin-left: 10%;
+margin-top:10px;
+}
+.ti2 .el-radio {
+margin-top: 10px;
+}
+.ti3 {
+width: 100%;
+color:#4ac1e1;
+background: #ebf9fc;
+margin-top:20px;
+padding:10px;
+box-sizing:border-box
+}
 .SeeExam .dx_r i {
   font-style:normal;
   display: inline-block;
