@@ -161,7 +161,12 @@ export default {
   methods: {
     // 查看试卷详情
     handleEdit(item) {
-      this.$router.push(`/SeeExam/${item.id}`)
+      this.$router.push({
+        path: `/SeeExam/${item.id}`,
+        query: {
+          userType: 't'
+        }
+      })
     },
     // 删除试卷功能  巨麻烦的功能。。。
     handleDelete (index, item, tableData, page) { // index为当前组件在当前页的下标  // item为该组件内容
@@ -287,7 +292,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style>
 .el-table td,
 .el-table th.is-leaf {
   text-align: center;
