@@ -66,16 +66,20 @@
 export default {
   name: "SeeExam",
   data () {
-    return {};
+    return {
+
+    };
   },
-  methods: {},
+  methods: {
+
+  },
   created () {
-    console.log("a");
+    console.log(this.$route.params)
   }
 };
 </script>
 <style>
-.dx_r i {
+.SeeExam .dx_r i {
   font-style:normal;
   display: inline-block;
   position: relative;
@@ -83,7 +87,7 @@ export default {
   transform: translateY(-50%);
   color:#ff7245;
 }
-.dx_item {
+.SeeExam .dx_item {
   overflow: hidden;
   position: relative;
   margin-top: 5px;
@@ -91,7 +95,7 @@ export default {
   padding:5px;
   box-sizing: border-box;
 }
-.dx_r {
+.SeeExam .dx_r {
   width: 15%;
   height: 100%;
   float: left;
@@ -102,18 +106,18 @@ export default {
   vertical-align: middle;
   background:#fcd6cb;
 }
-.dx_l {
+.SeeExam .dx_l {
   overflow: hidden;
   width: 85%;
   float: left;
 }
-.dx_l_r {
+.SeeExam .dx_l_r {
   float: left;
   width: 90%;
   box-sizing: border-box;
   line-height:28px;
 }
-.dx_l_l {
+.SeeExam .dx_l_l {
   float: left;
   width: 10%;
 }
@@ -134,7 +138,7 @@ export default {
   float: left;
   color: #989898;
 }
-.top1-left .top1-left-1 {
+.SeeExam .top1-left .top1-left-1 {
   margin-top: 10px;
 }
 .SeeExam .top1-center {
@@ -172,19 +176,19 @@ export default {
   margin: 0 0 auto;
   line-height: 80px;
 }
-.top3 .el-button {
+.SeeExam .top3 .el-button {
   background: black;
   color: white;
   border: black;
   font-size: 30px;
 }
-.main {
+.SeeExam .main {
   height: 500px;
   width: 60%;
   margin-left: 20%;
   /* background: wheat; */
 }
-.danxuan .h-cubiud {
+.SeeExam .danxuan .h-cubiud {
   width: 4px;
   height: 20px;
   margin: 0 7px -4px 3px;
@@ -192,10 +196,10 @@ export default {
   display: inline-block;
   background-color: #4ac0e0;
 }
-.danxuan .danxuan1 {
+.SeeExam .danxuan .danxuan1 {
   font-size: 16px;
 }
-.danxuan1 i {
+.SeeExam .danxuan1 i {
   font-size: 10px;
 }
 </style>
