@@ -38,25 +38,46 @@
           </div>
 
           <!-- 题 -->
-          <div class="dx_item">
-            <div class="dx_l">
-              <div class="dx_l_l">
-                <i class="el-icon-check" style="color:#4ac0e0;font-weight:bold;font-size:20px;"></i>
-                <span style="font-weight:bold;"><span style="font-size:20px">01</span>/10</span>
+          <div>
+            <div class="dx_item">
+              <div class="dx_l">
+                <div class="dx_l_l">
+                  <i class="el-icon-check" style="color:#4ac0e0;font-weight:bold;font-size:20px;"></i>
+                  <span style="font-weight:bold;">
+                    <span style="font-size:20px">01</span>/10
+                  </span>
+                </div>
+                <div class="dx_l_r">
+                  <div
+                    class="r_top"
+                  >（ ）可理解为依附在微信上的app，它的优点是应用无处不在，随时可用，又无需安装和卸载。而（ ）偏重为用户传递资讯，类似报纸杂志。</div>
+                  <div class="r_bottom">已选
+                    <span class='xuanxiangStyle'></span>
+                    选项</div>
+                </div>
               </div>
-              <div class="dx_l_r">
-                <div class="r_top">
-                  （ ）可理解为依附在微信上的app，它的优点是应用无处不在，随时可用，又无需安装和卸载。而（ ）偏重为用户传递资讯，类似报纸杂志。
-                </div>
-                <div class="r_bottom">
-                  已选B选项
-                </div>
+              <div class="dx_r">
+                <i>得分 : 加2分</i>
               </div>
             </div>
-            <div class="dx_r">
-              <i>得分 : 加2分</i>
+            <div class="ti2">
+              <el-row>
+                <el-radio v-model="radio" label="1">A &nbsp; &nbsp;正确</el-radio>
+              </el-row>
+              <el-row>
+                <el-radio v-model="radio" label="2">B &nbsp; &nbsp;错误</el-radio>
+              </el-row>
+              
+            </div>
+            <!-- 正确答案 -->
+            <div class="ti3">
+              <span class="ti3-1">
+                正确答案：
+                <span>A</span>
+              </span>
             </div>
           </div>
+          
         </div>
       </el-main>
     </el-container>
@@ -85,14 +106,14 @@ export default {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  color:#ff7245;
+  color: #ff7245;
 }
 .SeeExam .dx_item {
   overflow: hidden;
   position: relative;
   margin-top: 5px;
-  background:#f5f5f5;
-  padding:5px;
+  background: #f5f5f5;
+  padding: 5px;
   box-sizing: border-box;
 }
 .SeeExam .dx_r {
@@ -104,7 +125,7 @@ export default {
   right: 0;
   text-align: center;
   vertical-align: middle;
-  background:#fcd6cb;
+  background: #fcd6cb;
 }
 .SeeExam .dx_l {
   overflow: hidden;
@@ -115,7 +136,7 @@ export default {
   float: left;
   width: 90%;
   box-sizing: border-box;
-  line-height:28px;
+  line-height: 28px;
 }
 .SeeExam .dx_l_l {
   float: left;
