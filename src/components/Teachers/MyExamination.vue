@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="MyExamination">
     <!-- 头部 -->
     <div class="header">
       <div class="header-1">
@@ -379,6 +379,9 @@ export default {
 }
 .main {
   margin: 0 auto;
+  /* background: bisque; */
+  /* width:100%; */
+  /* height: 500px; */
   width: 90%;
   margin-top: 10px;
 }

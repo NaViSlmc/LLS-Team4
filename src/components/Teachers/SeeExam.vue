@@ -173,7 +173,7 @@ export default {
   text-align: left;
   line-height: 32px;
 }
-.xuanxiangStyle {
+.SeeExam .xuanxiangStyle {
   color: #4ac1e1;
   text-align: center;
   line-height: 15px;
