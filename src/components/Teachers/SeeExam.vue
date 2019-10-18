@@ -64,6 +64,7 @@
               </div>
             </div>
             <div class="ti2">
+              
               <el-row v-for="(itemSel,index) in examSelect(item)" :key="index">
                 <el-radio :value="item.answer" :label="itemSel.label">{{ itemSel.content }}</el-radio>
               </el-row>
@@ -124,7 +125,7 @@ export default {
         return len < 10 ? `0${len}` : `${len}`
       }
     },
-    // 试卷序列号
+    // 题目序列号
     examListIndex () {
       return (val) => {
         return val + 1 < 10 ? `0${val + 1}` : `${val + 1}`;
@@ -153,7 +154,7 @@ export default {
 };
 </script>
 <style>
-.basic_data_tit {
+.SeeExam .basic_data_tit {
   border-left: 4px solid #4abfe0;
   box-sizing: border-box;
   padding-left: 20px;
@@ -162,7 +163,7 @@ export default {
   font-size: 18px;
   color: #606060;
 }
-.el-radio__label {
+.SeeExam .el-radio__label {
   display:inline-block;
   white-space: pre-line;
   box-sizing:border-box;

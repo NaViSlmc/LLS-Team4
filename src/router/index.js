@@ -36,7 +36,7 @@ const routes = [
     component: Logined
   },
   {
-    path: '/SeeExam/:id', // 试卷详细
+    path: '/SeeExam/:id', // 试卷详请
     component: SeeExam,
     name: 'SeeExam',
   },

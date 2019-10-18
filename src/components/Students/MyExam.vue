@@ -12,12 +12,7 @@
     </div>
 
     <!-- 标题 -->
-    <el-menu
-      :default-active="activeIndex"
-      class="el-menu-demo"
-      mode="horizontal"
-      @select="handleSelect"
-    >
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <el-menu-item index="1">
         每日一练
         <i class="el-icon-edit"></i>
@@ -37,49 +32,41 @@
     </el-menu>
 
     <div class="Exam_center">
-      <p>基本资料</p>
-      <el-table style="width: 100%" ref="table" :data="data1">
-        <el-table-column label="班级姓名" width="210">
-          <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.className }}</span>
-          </template>
-        </el-table-column>
+      <p id="ExamTit">每日一练</p>
+      <el-table ref="table" :data="tableData">
 
         <el-table-column label="考试名称" width="210">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.name }}</span>
+            <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="开考时间" width="210">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.createTime }}</span>
+            <span>{{ scope.row.startTime }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="考试时长" width="210">
+        <el-table-column label="考试时长" width="110" style="text-align:left">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.duration }}</span>
+            <span>{{ scope.row.duration }}分钟</span>
           </template>
         </el-table-column>
 
         <el-table-column label="结束时间" width="210">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.endTime }}</span>
+            <span>{{ scope.row.endTime }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="210">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">缺考</el-button>
+            <el-button @click="handleClick(scope.row)" size="small">缺考</el-button>
           </template>
         </el-table-column>
       </el-table>
-<el-pagination
-  background
-  layout="prev, pager, next"
-  :total="3">
-</el-pagination>
+      <el-pagination hide-on-single-page :current-page="+page" @current-change="currentChange" background layout="prev, pager, next" :page-size="+pageSize" :total="recordsTotal" style="margin-top:10px;">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -87,42 +74,62 @@
 <script>
 export default {
   name: "MyExam",
-  data() {
+  data () {
     //组件用到的数据
     return {
       activeIndex: "1",
       page: "1",
       pageSize: "4",
       typeId: "1",
-      data1: null
+      tableData: null, // 表格值
+      recordsTotal: 0 // 表格值的总条目数(服务器端返回)
     };
   },
   methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+    // 分页效果 页数改变触发该方法
+    currentChange (val) {
+      this.getTableData(val,this.pageSize,this.typeId)
     },
-    handleClick(row) {
+    // 切换标签页
+    handleSelect (key) {
+      this.page = '1';
+      var contentList = ['每日一练','每周一测','每月一考','期末测试'];
+      document.getElementById('ExamTit').innerHTML = contentList[key-1];
+      this.getTableData(this.page,this.pageSize,key);
+    },
+    handleClick (row) {
       console.log(row);
+    },
+    // 请求表格内数据
+    getTableData (page,pageSize,typeId) {
+      this.$http.post("/business/examPlan/studentPage", {
+        page: +page, // 页数
+        pageSize: pageSize, // 每页显示条数
+        params: {
+          typeId: typeId // 考试类型id
+        }
+      }).then((res) => {
+        this.tableData = res.data.data;
+        this.recordsTotal = res.data.recordsTotal;
+        [...this.tableData].map((item) => {
+          // isTimeout 为true表示还没开始考试  为false表示
+          item.isTimeout = item.examResultList?true:false;
+          // isStart 为true 表示考试已经开始，false表示考试未开始
+          item.isStart = new Date(item.startTime)>=new Date()?false:true;
+        })
+      });
     }
   },
-  created() {
-    var app = this;
-    this.$http
-      .post("/business/examPlan/studentPage", {
-        page: +this.page, //页数
-        pageSize: this.pageSize, //每页显示条数
-        params: {
-          typeId: +this.typeId //考试类型id
-        }
-      })
-      .then(function(res) {
-        console.log(res.data.data);
-        app.data1 = res.data.data;
-      });
+  created () {
+    this.getTableData(this.page,this.pageSize,this.typeId);
   }
 };
 </script>
 <style>
+.MyExam .el-table td,
+.el-table th.is-leaf {
+  text-align: center;
+}
 .MyExam_box {
   height: 144px;
   background: linear-gradient(60deg, #6cc4ce, #65f1ce);

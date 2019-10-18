@@ -64,7 +64,6 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            hide-on-single-page
             :key="1"
             :current-page="+page1"
             @current-change="currentChange"
@@ -116,7 +115,6 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            hide-on-single-page
             :key="2"
             :current-page="+page2"
             @current-change="currentChange"
@@ -168,7 +166,6 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            hide-on-single-page
             :key="3"
             :current-page="+page3"
             @current-change="currentChange"
@@ -382,9 +379,6 @@ export default {
 }
 .main {
   margin: 0 auto;
-  /* background: bisque; */
-  /* width:100%; */
-  height: 500px;
   width: 90%;
   margin-top: 10px;
 }
