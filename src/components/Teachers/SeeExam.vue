@@ -23,7 +23,7 @@
         </div>
         <!-- 退出 -->
         <div class="top3">
-          <el-button @click="goTopPaper">x</el-button>
+          <el-button @click="goTopPaper" title="返回上一页">x</el-button>
         </div>
       </el-header>
       <el-main>
