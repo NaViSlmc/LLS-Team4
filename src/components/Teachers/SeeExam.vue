@@ -153,7 +153,7 @@ export default {
 };
 </script>
 <style>
-.basic_data_tit {
+.SeeExam .basic_data_tit {
   border-left: 4px solid #4abfe0;
   box-sizing: border-box;
   padding-left: 20px;
@@ -162,7 +162,7 @@ export default {
   font-size: 18px;
   color: #606060;
 }
-.el-radio__label {
+.SeeExam .el-radio__label {
   display:inline-block;
   white-space: pre-line;
   box-sizing:border-box;
@@ -172,7 +172,7 @@ export default {
   text-align: left;
   line-height: 32px;
 }
-.xuanxiangStyle {
+.SeeExam .xuanxiangStyle {
   color: #4ac1e1;
   text-align: center;
   line-height: 15px;
