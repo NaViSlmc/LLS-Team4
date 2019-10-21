@@ -61,7 +61,7 @@
 
         <el-table-column label="操作" width="210">
           <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" size="small">缺考</el-button>
+            <el-button style="width:100px" :type="examPaperStatus(scope.row)=='缺考'?'danger':examPaperStatus(scope.row)=='开始考试'?'primary':'info'" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -84,6 +84,23 @@ export default {
       tableData: null, // 表格值
       recordsTotal: 0 // 表格值的总条目数(服务器端返回)
     };
+  },
+  computed: {
+    // 对试卷的当前状态进行处理
+    examPaperStatus() {
+      // 状态1、还未开考
+      // 状态2、已经开考
+      // 状态3、考试时间已过，缺考
+      // isStart 为true表示考试已经开始，false表示考试未开始
+      // isTimeout 为true表示还没进行考试
+      return (item) => {
+        return item.isStart?item.isTimeout?
+        new Date(item.endTime)>=new Date()?'开始考试':'缺考'
+        :'开始考试'
+        :'考试未开始';
+      }
+      
+    }
   },
   methods: {
     // 分页效果 页数改变触发该方法
@@ -126,6 +143,9 @@ export default {
 };
 </script>
 <style>
+.MyExam {
+  min-height: 500px;
+}
 .MyExam .el-table td,
 .el-table th.is-leaf {
   text-align: center;
