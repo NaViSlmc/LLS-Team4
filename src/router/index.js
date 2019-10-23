@@ -24,6 +24,8 @@ import MyJoin from '../components/Students/MyJoin.vue'// 我的参加
 import MyExam from '../components/Students/MyExam.vue'// 我的考试
 import MyDataStudent from '../components/Students/MyDataStudent.vue'// 个人资料
 import MyClass from '../components/Students/MyClass.vue'// 个人资料
+import MySeeExam from '../components/Students/MySeeExam.vue'// 查看试卷
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -39,6 +41,12 @@ const routes = [
     path: '/SeeExam/:id', // 试卷详请
     component: SeeExam,
     name: 'SeeExam',
+  },
+  {
+    // 查看试卷
+    path:'/MySeeExam',
+    component: MySeeExam,
+    name: 'MySeeExam',
   },
   {
     path: '/teacher', // 教师端主页面
@@ -126,6 +134,7 @@ const routes = [
         component: MyExam,
         name: 'MyExam',
       },
+
       {
         // 个人资料
         path: 'MyDataStudent', 

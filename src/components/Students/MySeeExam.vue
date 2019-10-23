@@ -1,15 +1,17 @@
 <template>
-  <div class="SeeExam" v-if="examData&&examList">
+  <div class="MySeeExam" v-if="examData&&examList">
     <el-container>
       <el-header class="top" style="width:100%">
         <!-- 基本资料 -->
         <div class="top1">
           <!-- 头部左边 -->
           <div class="top1-left">
-            <div class="top1-left-1" v-if="userType=='s'">
+            <!-- <div class="top1-left-1" v-if="userType=='s'">
               <i class="el-icon-user-solid"></i>
               姓名
-            </div>
+            </div>-->
+            <div>学生姓名：{{examData.userId}}</div>
+
             <div class="top1-left-2">试卷名称：{{examData.name}}</div>
           </div>
           <!-- 头部中间 -->
@@ -17,16 +19,21 @@
           <!-- 头部右边 -->
           <!-- <div class="top1-right">已完成23/23</div> -->
         </div>
-        <!-- 分数 -->
-        <div class="top2">
-          <b>总分:{{ examPaperTotalScore }}</b>
+        <!-- 倒计时 -->
+        <div class="daojishi">
+          <span id="spanTime">{{minutes}} : {{seconds}}</span>
         </div>
-        <!-- 退出 -->
-        <div class="top3">
+        <!-- 提交按钮 -->
+        <div class='T-button'>
+           <el-button type='primary'>提交按钮</el-button>
+           <div class="top3">
           <el-button @click="goTopPaper" title="返回上一页">x</el-button>
         </div>
+        </div>
+        <!-- 返回按钮 -->
+        
+        
       </el-header>
-
       <el-main>
         <div class="main">
           <div class="danxuan">
@@ -88,12 +95,16 @@
 
 <script>
 export default {
-  name: "SeeExam",
+  name: "MySeeExam",
   data() {
     return {
       userType: this.$route.query.userType, // 当前的用户类型 s为学生 t为教师
       examData: null, // 请求到的试卷属性
       examList: [], // 试卷题目
+      timer: 0,
+      //定义倒计时的时间(倒计时1分钟10秒)
+      minutes:1,
+      seconds: '0'+0,    
     };
   },
   computed: {
@@ -140,12 +151,29 @@ export default {
     // 返回上一页
     goTopPaper() {
       this.$router.go(-1);
+    },
+    showTimer() {
+      //判断时间到了没
+      if (this.seconds == 0 && this.minutes == 0) {
+        clearInterval(this.timer); //清除定时器
+        alert("时间到");
+        return;
+      }
+      this.seconds--;
+      if (this.seconds < 0) {
+        this.seconds = 59;
+        this.minutes--;
+      }
+      this.minutes =
+        (this.minutes + "").length == 1 ? "0" + this.minutes : this.minutes; //(minutes+"")是将其数据类型转换成字符串类型
+      this.seconds =
+        (this.seconds + "").length == 1 ? "0" + this.seconds : this.seconds;
     }
   },
   created() {
     // 请求试卷详细内容
     this.$http
-      .post(`/business/examQuestionMark/pageDetail?id=${this.$route.params.id}`)
+      .get(`/business/examPlan/examStart?id=${this.$route.params.id}`)
       .then(res => {
         this.examData = res.data.examPage;
         // 对试题进行排序(根据题号)
@@ -162,7 +190,7 @@ export default {
 };
 </script>
 <style>
-.SeeExam .basic_data_tit {
+.MySeeExam .basic_data_tit {
   border-left: 4px solid #4abfe0;
   box-sizing: border-box;
   padding-left: 20px;
@@ -171,17 +199,17 @@ export default {
   font-size: 18px;
   color: #606060;
 }
-.SeeExam .el-radio__label {
+.MySeeExam .el-radio__label {
   display: inline-block;
   white-space: pre-line;
   box-sizing: border-box;
   width: 780px;
 }
-.SeeExam .el-header {
+.MySeeExam .el-header {
   text-align: left;
   line-height: 32px;
 }
-.SeeExam .xuanxiangStyle {
+.MySeeExam .xuanxiangStyle {
   color: #4ac1e1;
   text-align: center;
   line-height: 15px;
@@ -191,14 +219,14 @@ export default {
   display: inline-block;
   border-bottom: 1px solid black;
 }
-.ti2 {
+.MySeeExam .ti2 {
   margin-left: 10%;
   margin-top: 10px;
 }
-.ti2 .el-radio {
+.MySeeExam .ti2 .el-radio {
   margin-top: 10px;
 }
-.ti3 {
+.MySeeExam .ti3 {
   width: 100%;
   color: #4ac1e1;
   background: #ebf9fc;
@@ -206,7 +234,7 @@ export default {
   padding: 10px;
   box-sizing: border-box;
 }
-.SeeExam .dx_r i {
+.MySeeExam .dx_r i {
   font-style: normal;
   display: inline-block;
   position: relative;
@@ -214,7 +242,7 @@ export default {
   transform: translateY(-50%);
   color: #ff7245;
 }
-.SeeExam .dx_item {
+.MySeeExam .dx_item {
   top: 10px;
   overflow: hidden;
   position: relative;
@@ -223,7 +251,7 @@ export default {
   padding: 5px;
   box-sizing: border-box;
 }
-.SeeExam .dx_r {
+.MySeeExam .dx_r {
   width: 15%;
   height: 100%;
   float: left;
@@ -234,49 +262,49 @@ export default {
   vertical-align: middle;
   background: #fcd6cb;
 }
-.SeeExam .dx_l {
+.MySeeExam .dx_l {
   overflow: hidden;
   width: 85%;
   float: left;
 }
-.SeeExam .dx_l_r {
+.MySeeExam .dx_l_r {
   float: left;
   width: 90%;
   box-sizing: border-box;
   line-height: 28px;
 }
-.SeeExam .dx_l_l {
+.MySeeExam .dx_l_l {
   float: left;
   width: 10%;
 }
-.SeeExam .top {
+.MySeeExam .top {
   background: black;
   height: 80px !important;
 }
-.SeeExam .top1 {
+.MySeeExam .top1 {
   width: 55%;
   height: 100%;
   margin-left: 250px;
   float: left;
 }
-.SeeExam .top1-left {
+.MySeeExam .top1-left {
   height: 80px;
   width: 35%;
   font-size: 16px;
   float: left;
   color: #989898;
 }
-.SeeExam .top1-left .top1-left-1 {
+.MySeeExam .top1-left .top1-left-1 {
   margin-top: 10px;
 }
-.SeeExam .top1-left .top1-left-2:only-child {
+.MySeeExam .top1-left .top1-left-2:only-child {
   /* line-height: 80px; */
   /* vertical-align: middle; */
   position: relative;
   top: 50%;
   margin-top: -16px;
 }
-.SeeExam .top1-center {
+.MySeeExam .top1-center {
   height: 100%;
   width: 30%;
   float: left;
@@ -285,7 +313,7 @@ export default {
   color: #989898;
   margin-left: 100px;
 }
-.SeeExam .top1-right {
+.MySeeExam .top1-right {
   height: 100%;
   width: 29%;
   float: right;
@@ -295,7 +323,7 @@ export default {
   margin-right: 2px;
 }
 
-.SeeExam .top2 {
+.MySeeExam .top2 {
   height: 100%;
   width: 10%;
   background: red;
@@ -305,24 +333,24 @@ export default {
   line-height: 80px;
   text-align: center;
 }
-.SeeExam .top3 {
+.MySeeExam .top3 {
   height: 100%;
   width: 10%;
   float: right;
   margin: 0 0 auto;
   line-height: 80px;
 }
-.SeeExam .top3 .el-button {
+.MySeeExam .top3 .el-button {
   background: black;
   color: white;
   border: black;
   font-size: 30px;
 }
-.SeeExam .main {
+.MySeeExam .main {
   width: 60%;
   margin-left: 20%;
 }
-.SeeExam .danxuan .h-cubiud {
+.MySeeExam .danxuan .h-cubiud {
   width: 4px;
   height: 20px;
   margin: 0 7px -4px 3px;
@@ -330,8 +358,30 @@ export default {
   display: inline-block;
   background-color: #4ac0e0;
 }
-.SeeExam .danxuan .danxuan1 {
+.MySeeExam .danxuan .danxuan1 {
   font-size: 16px;
 }
-
+.MySeeExam .danxuan1 i {
+  font-size: 10px;
+}
+.MySeeExam .daojishi {
+  float: left;
+  width: 10%;
+  height: 100%;
+  /* background: red; */
+  float: left;
+  font-size: 22px;
+  line-height: 80px;
+  text-align: center;
+  overflow: hidden;
+}
+.MySeeExam #spanTime {
+  width: 50px;
+  height: 50px;
+  /* background-color:#4ac0e0; */
+  color: #4ac0e0;
+}
+.MySeeExam .T-button{
+  line-height:80px;
+}
 </style>
