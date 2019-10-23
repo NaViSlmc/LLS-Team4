@@ -72,10 +72,6 @@
               </div>
             </div>
             <div class="ti2">
-<<<<<<< HEAD
-=======
-
->>>>>>> zhongl
               <el-row v-for="(itemSel,index) in examSelect(item)" :key="index">
                 <el-radio :value="item.answer" :label="itemSel.label">{{ itemSel.content }}</el-radio>
               </el-row>
