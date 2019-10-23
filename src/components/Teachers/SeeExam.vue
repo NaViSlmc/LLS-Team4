@@ -37,7 +37,11 @@
             </p>
             <!-- <span class="danxuan1">
               <b>一、</b>
+<<<<<<< HEAD
             单选题-->
+=======
+              单选题 -->
+>>>>>>> zhongl
             <!-- <i>(20分，每题2分)</i> -->
             <!-- </span> -->
           </div>
@@ -68,6 +72,10 @@
               </div>
             </div>
             <div class="ti2">
+<<<<<<< HEAD
+=======
+
+>>>>>>> zhongl
               <el-row v-for="(itemSel,index) in examSelect(item)" :key="index">
                 <el-radio :value="item.answer" :label="itemSel.label">{{ itemSel.content }}</el-radio>
               </el-row>
@@ -98,7 +106,7 @@ export default {
   },
   computed: {
     // 该试卷总分计算
-    examPaperTotalScore() {
+    examPaperTotalScore () {
       var num = 0;
       this.examList.map(item => {
         num += item.score;
@@ -144,20 +152,31 @@ export default {
   },
   created() {
     // 请求试卷详细内容
-    this.$http
-      .post(`/business/examQuestionMark/pageDetail?id=${this.$route.params.id}`)
-      .then(res => {
+    if (true) {
+      this.$http.post(`/business/examQuestionMark/pageDetail?id=${this.$route.params.id}`).then((res) => {
         this.examData = res.data.examPage;
         // 对试题进行排序(根据题号)
-        function examListSort(val) {
+        function examListSort (val) {
           return (a, b) => {
-            return a[val] - b[val];
-          };
+            return a[val] - b[val]
+          }
         }
-        this.examList = res.data.list.sort(examListSort("sort"));
-        //开启定时器
-        // this.timer = setInterval(this.showTimer, 1000);
-      });
+        this.examList = res.data.list.sort(examListSort('sort'));
+      })
+    }else {
+      this.$http.get(`/business/examPlan/paperDetailAfterCrrect?id=${this.$route.params.id}`).then((res) => {
+        this.examData = res.data.examPage;
+        console.log(res)
+        // 对试题进行排序(根据题号)
+        function examListSort (val) {
+          return (a, b) => {
+            return a[val] - b[val]
+          }
+        }
+        this.examList = res.data.list.sort(examListSort('sort'));
+      })
+    }
+
   }
 };
 </script>
