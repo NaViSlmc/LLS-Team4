@@ -37,7 +37,7 @@
             <!-- <span class="danxuan1">
               <b>一、</b>
               单选题 -->
-              <!-- <i>(20分，每题2分)</i> -->
+            <!-- <i>(20分，每题2分)</i> -->
             <!-- </span> -->
           </div>
 
@@ -64,7 +64,7 @@
               </div>
             </div>
             <div class="ti2">
-              
+
               <el-row v-for="(itemSel,index) in examSelect(item)" :key="index">
                 <el-radio :value="item.answer" :label="itemSel.label">{{ itemSel.content }}</el-radio>
               </el-row>
@@ -96,7 +96,7 @@ export default {
   },
   computed: {
     // 该试卷总分计算
-    examPaperTotalScore() {
+    examPaperTotalScore () {
       var num = 0;
       this.examList.map((item) => {
         num += item.score;
@@ -140,16 +140,31 @@ export default {
   },
   created () {
     // 请求试卷详细内容
-    this.$http.post(`/business/examQuestionMark/pageDetail?id=${this.$route.params.id}`).then((res) => {
-      this.examData = res.data.examPage;
-      // 对试题进行排序(根据题号)
-      function examListSort (val) {
-        return (a,b)=> {
-          return a[val] - b[val]
+    if (true) {
+      this.$http.post(`/business/examQuestionMark/pageDetail?id=${this.$route.params.id}`).then((res) => {
+        this.examData = res.data.examPage;
+        // 对试题进行排序(根据题号)
+        function examListSort (val) {
+          return (a, b) => {
+            return a[val] - b[val]
+          }
         }
-      }
-      this.examList = res.data.list.sort(examListSort('sort'));
-    })
+        this.examList = res.data.list.sort(examListSort('sort'));
+      })
+    }else {
+      this.$http.get(`/business/examPlan/paperDetailAfterCrrect?id=${this.$route.params.id}`).then((res) => {
+        this.examData = res.data.examPage;
+        console.log(res)
+        // 对试题进行排序(根据题号)
+        function examListSort (val) {
+          return (a, b) => {
+            return a[val] - b[val]
+          }
+        }
+        this.examList = res.data.list.sort(examListSort('sort'));
+      })
+    }
+
   }
 };
 </script>
@@ -164,9 +179,9 @@ export default {
   color: #606060;
 }
 .SeeExam .el-radio__label {
-  display:inline-block;
+  display: inline-block;
   white-space: pre-line;
-  box-sizing:border-box;
+  box-sizing: border-box;
   width: 780px;
 }
 .SeeExam .el-header {
@@ -265,7 +280,7 @@ export default {
   /* line-height: 80px; */
   /* vertical-align: middle; */
   position: relative;
-  top:50%;
+  top: 50%;
   margin-top: -16px;
 }
 .SeeExam .top1-center {

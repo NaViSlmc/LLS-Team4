@@ -35,13 +35,13 @@
       <p id="ExamTit">每日一练</p>
       <el-table ref="table" :data="tableData">
 
-        <el-table-column label="考试名称" width="210">
+        <el-table-column label="考试名称" width="250">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="开考时间" width="210">
+        <el-table-column label="开考时间" width="240">
           <template slot-scope="scope">
             <span>{{ scope.row.startTime }}</span>
           </template>
@@ -53,7 +53,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="结束时间" width="210">
+        <el-table-column label="结束时间" width="240">
           <template slot-scope="scope">
             <span>{{ scope.row.endTime }}</span>
           </template>
@@ -61,7 +61,10 @@
 
         <el-table-column label="操作" width="210">
           <template slot-scope="scope">
-            <el-button style="width:100px" :type="examPaperStatus(scope.row)=='缺考'?'danger':examPaperStatus(scope.row)=='开始考试'?'primary':'info'" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
+            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='缺考'" type="danger" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
+            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='开始考试'" type="primary" @click="startExam(scope.row.id)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
+            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='考试时间未到'" type="info" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
+            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='查看试卷'" type="primary" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -82,43 +85,61 @@ export default {
       pageSize: "4",
       typeId: "1",
       tableData: null, // 表格值
-      recordsTotal: 0 // 表格值的总条目数(服务器端返回)
+      recordsTotal: 0 // 表格值的总条目数(后端返回)
     };
   },
   computed: {
     // 对试卷的当前状态进行处理
-    examPaperStatus() {
+    examPaperStatus () {
       // 状态1、还未开考
       // 状态2、已经开考
       // 状态3、考试时间已过，缺考
+      // 状态4、考试时间已过，查看试卷
       // isStart 为true表示考试已经开始，false表示考试未开始
       // isTimeout 为true表示还没进行考试
       return (item) => {
-        return item.isStart?item.isTimeout?
-        new Date(item.endTime)>=new Date()?'开始考试':'缺考'
-        :'开始考试'
-        :'考试未开始';
+        if (new Date(item.endTime) >= new Date()) { // true：考试还没有结束/考试时间还未到
+          return item.isStart ? '开始考试' : '考试时间未到'
+        } else {
+          return item.isTimeout ? '缺考' : '查看试卷'
+        }
+        // return item.isStart?  item.isTimeout? new Date(item.endTime)>=new Date()  ?'开始考试':'缺考':'开始考试':'考试未开始';
       }
-      
+
     }
   },
   methods: {
+    // 开始考试 跳转
+    startExam(id) {
+      this.$router.push({
+        path: '/MySeeExam',
+        query: {
+          id:id
+        }
+      })
+    },
     // 分页效果 页数改变触发该方法
     currentChange (val) {
-      this.getTableData(val,this.pageSize,this.typeId)
+      this.getTableData(val, this.pageSize, this.typeId)
     },
     // 切换标签页
     handleSelect (key) {
       this.page = '1';
-      var contentList = ['每日一练','每周一测','每月一考','期末测试'];
-      document.getElementById('ExamTit').innerHTML = contentList[key-1];
-      this.getTableData(this.page,this.pageSize,key);
+      var contentList = ['每日一练', '每周一测', '每月一考', '期末测试'];
+      document.getElementById('ExamTit').innerHTML = contentList[key - 1];
+      this.getTableData(this.page, this.pageSize, key);
     },
     handleClick (row) {
-      console.log(row);
+      // console.log(row);
+      this.$router.push({
+        path: `/SeeExam/${row.id}`,
+        query: {
+          userType: 's'
+        }
+      })
     },
     // 请求表格内数据
-    getTableData (page,pageSize,typeId) {
+    getTableData (page, pageSize, typeId) {
       this.$http.post("/business/examPlan/studentPage", {
         page: +page, // 页数
         pageSize: pageSize, // 每页显示条数
@@ -126,25 +147,36 @@ export default {
           typeId: typeId // 考试类型id
         }
       }).then((res) => {
-        this.tableData = res.data.data;
-        this.recordsTotal = res.data.recordsTotal;
-        [...this.tableData].map((item) => {
-          // isTimeout 为true表示还没开始考试  为false表示
-          item.isTimeout = item.examResultList?true:false;
-          // isStart 为true 表示考试已经开始，false表示考试未开始
-          item.isStart = new Date(item.startTime)>=new Date()?false:true;
-        })
+        if (res.data.status != 500) {
+          this.tableData = res.data.data;
+          this.recordsTotal = res.data.recordsTotal;
+          [...this.tableData].map((item) => {
+            // isTimeout 为true表示还没开始考试 
+            item.isTimeout = item.examResultList || item.examResultList == null ? true : false;
+            // isStart 为true 表示考试已经开始，false表示考试未开始
+            item.isStart = new Date(item.startTime) >= new Date() ? false : true;
+          })
+        } else {
+          // 清空localStorage
+          window.localStorage.removeItem('userId');
+          window.localStorage.removeItem('userName');
+          this.$message({
+            message: '超时未操作,请重新登录',
+            type: 'warning'
+          });
+          this.$router.push('/');
+        }
       });
     }
   },
   created () {
-    this.getTableData(this.page,this.pageSize,this.typeId);
+    this.getTableData(this.page, this.pageSize, this.typeId);
   }
 };
 </script>
 <style>
 .MyExam {
-  min-height: 500px;
+  min-height: 535px;
 }
 .MyExam .el-table td,
 .el-table th.is-leaf {
