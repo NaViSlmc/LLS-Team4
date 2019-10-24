@@ -1,5 +1,5 @@
 <template>
-  <div class="MySeeExam" v-if="examData&&examList">
+  <div class="MySeeExam" v-if="examData && examList">
     <el-container>
       <el-header class="top" style="width:100%">
         <!-- 基本资料 -->
@@ -10,13 +10,12 @@
               <i class="el-icon-user-solid"></i>
               姓名
             </div>-->
-            <div>学生姓名：{{examData.userId}}</div>
+            <div class="top1-left-1">学生姓名：{{userName}}</div>
 
             <div class="top1-left-2">试卷名称：{{examData.name}}</div>
           </div>
-          <!-- 头部中间 -->
-          <div class="top1-center" v-if="userType=='t'">创建时间：{{examData.createTime}}</div>
-          <!-- 头部右边 -->
+          
+                <!-- 头部右边 -->
           <!-- <div class="top1-right">已完成23/23</div> -->
         </div>
         <!-- 倒计时 -->
@@ -24,15 +23,13 @@
           <span id="spanTime">{{minutes}} : {{seconds}}</span>
         </div>
         <!-- 提交按钮 -->
-        <div class='T-button'>
-           <el-button type='primary'>提交按钮</el-button>
-           <div class="top3">
-          <el-button @click="goTopPaper" title="返回上一页">x</el-button>
-        </div>
+        <div class="T-button">
+          <el-button type="primary" @click="myinput" class="e-button">提交</el-button>
+          <div class="top3">
+            <el-button @click="mygoTopPaper" title="返回上一页">x</el-button>
+          </div>
         </div>
         <!-- 返回按钮 -->
-        
-        
       </el-header>
       <el-main>
         <div class="main">
@@ -62,30 +59,23 @@
                 </div>
                 <div class="dx_l_r">
                   <div class="r_top">{{ item.stem }}</div>
-                  <div class="r_bottom" v-if="userType=='s'">
+                  <div class="r_bottom">
                     已选
-                    <span class="xuanxiangStyle">A</span>
+                    <span class="xuanxiangStyle"></span>
                     选项
                   </div>
                 </div>
               </div>
               <div class="dx_r">
-                <i v-if="userType=='t'">该题分值: {{item.score}}分</i>
-                <i v-else>得分 : 加2分</i>
+                <i>该题分值: {{item.score}}分</i>
               </div>
             </div>
             <div class="ti2">
               <el-row v-for="(itemSel,index) in examSelect(item)" :key="index">
-                <el-radio :value="item.answer" :label="itemSel.label">{{ itemSel.content }}</el-radio>
+                <el-radio v-model="item.answer" :label="itemSel.label">{{ itemSel.content }}</el-radio>
               </el-row>
             </div>
             <!-- 正确答案 -->
-            <div class="ti3">
-              <span class="ti3-1">
-                正确答案：
-                <span>{{ item.answer }}</span>
-              </span>
-            </div>
           </div>
         </div>
       </el-main>
@@ -98,13 +88,13 @@ export default {
   name: "MySeeExam",
   data() {
     return {
-      userType: this.$route.query.userType, // 当前的用户类型 s为学生 t为教师
+      userName: "",
       examData: null, // 请求到的试卷属性
       examList: [], // 试卷题目
       timer: 0,
       //定义倒计时的时间(倒计时1分钟10秒)
-      minutes:1,
-      seconds: '0'+0,    
+      minutes: 1,
+      seconds: "0" + 0,
     };
   },
   computed: {
@@ -149,8 +139,14 @@ export default {
   },
   methods: {
     // 返回上一页
-    goTopPaper() {
+    mygoTopPaper() {
       this.$router.go(-1);
+    },
+    // 提交
+    myinput() {
+      this.$http.post("business/examResult/submit").then(function(res) {
+        console.log(res);
+      });
     },
     showTimer() {
       //判断时间到了没
@@ -171,6 +167,7 @@ export default {
     }
   },
   created() {
+    console.log(this.$route.params)
     // 请求试卷详细内容
     this.$http
       .get(`/business/examPlan/examStart?id=${this.$route.params.id}`)
@@ -186,9 +183,11 @@ export default {
         //开启定时器
         // this.timer = setInterval(this.showTimer, 1000);
       });
+    this.userName = window.localStorage.getItem("userName");
   }
 };
 </script>
+
 <style>
 .MySeeExam .basic_data_tit {
   border-left: 4px solid #4abfe0;
@@ -284,18 +283,21 @@ export default {
 .MySeeExam .top1 {
   width: 55%;
   height: 100%;
-  margin-left: 250px;
+  margin-left: 50px;
   float: left;
 }
 .MySeeExam .top1-left {
   height: 80px;
-  width: 35%;
+  width: 100%;
   font-size: 16px;
   float: left;
   color: #989898;
 }
 .MySeeExam .top1-left .top1-left-1 {
-  margin-top: 10px;
+  width: 50%;
+  float: left;
+  text-align: center;
+  line-height: 80px;
 }
 .MySeeExam .top1-left .top1-left-2:only-child {
   /* line-height: 80px; */
@@ -303,6 +305,11 @@ export default {
   position: relative;
   top: 50%;
   margin-top: -16px;
+}
+.MySeeExam .top1-left-2 {
+  width: 50%;
+  float: left;
+  line-height: 40px;
 }
 .MySeeExam .top1-center {
   height: 100%;
@@ -336,9 +343,10 @@ export default {
 .MySeeExam .top3 {
   height: 100%;
   width: 10%;
-  float: right;
+  float: left;
   margin: 0 0 auto;
   line-height: 80px;
+  margin-left: 30px;
 }
 .MySeeExam .top3 .el-button {
   background: black;
@@ -381,7 +389,12 @@ export default {
   /* background-color:#4ac0e0; */
   color: #4ac0e0;
 }
-.MySeeExam .T-button{
-  line-height:80px;
+.MySeeExam .T-button {
+  float: left;
+  width: 30%;
+}
+.MySeeExam .e-button {
+  margin-top: 20px;
+  float: left;
 }
 </style>

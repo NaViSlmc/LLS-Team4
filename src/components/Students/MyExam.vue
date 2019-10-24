@@ -62,7 +62,7 @@
         <el-table-column label="操作" width="210">
           <template slot-scope="scope">
             <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='缺考'" type="danger" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
-            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='开始考试'" type="primary" @click="startExam(scope.row.id)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
+            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='开始考试'" type="primary" @click="startExam(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
             <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='考试时间未到'" type="info" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
             <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='查看试卷'" type="primary" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
           </template>
@@ -110,11 +110,13 @@ export default {
   },
   methods: {
     // 开始考试 跳转
-    startExam(id) {
+    startExam(item) {
+      console.log(item)
       this.$router.push({
-        path: '/MySeeExam',
-        query: {
-          id:id
+        name: `MySeeExam`,
+        params: {
+          id: item.id,
+          time: item.endTime
         }
       })
     },
