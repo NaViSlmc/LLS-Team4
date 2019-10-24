@@ -203,7 +203,10 @@ export default {
     // 查看试卷详情
     handleEdit(item) {
       this.$router.push({
-        path: `/SeeExam/${item.id}`,
+        name: `SeeExam`,
+        params: {
+          id:item.id
+        },
         query: {
           userType: 't'
         }

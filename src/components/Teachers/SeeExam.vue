@@ -58,9 +58,9 @@
                     选项</div>
                 </div>
               </div>
-              <div class="dx_r">
-                <i v-if="userType=='t'">该题分值: {{item.score}}分</i>
-                <i v-else>得分 : 加2分</i>
+              <div class="dx_r" :style="userType=='t'?'background:rgb(121, 187, 255)':'background:#fcd6cb'">
+                <i v-if="userType=='t'" style="color:#fff">该题分值: {{item.score}}分</i>
+                <i v-else style="color:#ff7245">得分 : 加2分</i>
               </div>
             </div>
             <div class="ti2">
@@ -140,7 +140,6 @@ export default {
   },
   created () {
     // 请求试卷详细内容
-    if (true) {
       this.$http.post(`/business/examQuestionMark/pageDetail?id=${this.$route.params.id}`).then((res) => {
         this.examData = res.data.examPage;
         // 对试题进行排序(根据题号)
@@ -151,20 +150,6 @@ export default {
         }
         this.examList = res.data.list.sort(examListSort('sort'));
       })
-    }else {
-      this.$http.get(`/business/examPlan/paperDetailAfterCrrect?id=${this.$route.params.id}`).then((res) => {
-        this.examData = res.data.examPage;
-        console.log(res)
-        // 对试题进行排序(根据题号)
-        function examListSort (val) {
-          return (a, b) => {
-            return a[val] - b[val]
-          }
-        }
-        this.examList = res.data.list.sort(examListSort('sort'));
-      })
-    }
-
   }
 };
 </script>

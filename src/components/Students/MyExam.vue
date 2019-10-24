@@ -63,7 +63,7 @@
           <template slot-scope="scope">
             <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='缺考'" type="danger" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
             <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='开始考试'" type="primary" @click="startExam(scope.row.id)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
-            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='考试时间未到'" type="info" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
+            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='暂未开考'" type="info" size="small">{{ examPaperStatus(scope.row) }}</el-button>
             <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='查看试卷'" type="primary" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
           </template>
         </el-table-column>
@@ -99,7 +99,7 @@ export default {
       // isTimeout 为true表示还没进行考试
       return (item) => {
         if (new Date(item.endTime) >= new Date()) { // true：考试还没有结束/考试时间还未到
-          return item.isStart ? '开始考试' : '考试时间未到'
+          return item.isStart ? '开始考试' : '暂未开考'
         } else {
           return item.isTimeout ? '缺考' : '查看试卷'
         }
@@ -129,10 +129,14 @@ export default {
       document.getElementById('ExamTit').innerHTML = contentList[key - 1];
       this.getTableData(this.page, this.pageSize, key);
     },
-    handleClick (row) {
+    // 查看试卷详情跳转
+    handleClick (item) {
       // console.log(row);
       this.$router.push({
-        path: `/SeeExam/${row.id}`,
+        name: `SeeExam`,
+        params: {
+          id:item.id
+        },
         query: {
           userType: 's'
         }
