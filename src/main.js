@@ -6,7 +6,7 @@ import request from './ajax.js'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
-
+import store from './store'
 Vue.prototype.$http = request;
 Vue.config.productionTip = false;
 Vue.use(ElementUI); // 在Vue项目中使用elementui库
@@ -16,5 +16,6 @@ new Vue({
   el: '#app',
   components: { App },
   router,
+  store,
   template: '<App/>'
 })

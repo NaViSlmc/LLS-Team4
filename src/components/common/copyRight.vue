@@ -6,7 +6,7 @@
           <img src="../../images/logo.png">
         </span>
         <span>|</span>
-        <span class='fo1'>        &nbsp;
+        <span>&nbsp;
         培养能力 塑造人才</span>
       </div>
       <div class="z-footer2">
@@ -55,7 +55,7 @@ export default {
 }
 
 .z-footer1 span {
-  color: #6c7177;
+  color: #fff;
   font-weight: 100;
   margin-left: 10px;
 }

@@ -8,7 +8,7 @@
           <div class="top1-left">
             <div class="top1-left-1" v-if="userType=='s'">
               <i class="el-icon-user-solid"></i>
-              姓名
+              {{ userName }}
             </div>
             <div class="top1-left-2">试卷名称：{{examData.name}}</div>
           </div>
@@ -19,7 +19,9 @@
         </div>
         <!-- 分数 -->
         <div class="top2">
-          <b>总分:{{ examPaperTotalScore }}</b>
+          <b v-if="isMiss=='0'">总分:{{ examPaperTotalScore }}</b>
+          <b v-else>缺考</b>
+
         </div>
         <!-- 退出 -->
         <div class="top3">
@@ -57,14 +59,14 @@
                   <div class="r_top">{{ item.stem }}</div>
                   <div class="r_bottom" v-if="userType=='s'">
                     已选
-                    <span class="xuanxiangStyle">A</span>
+                    <span class="xuanxiangStyle">{{ item.studentAnswer }}</span>
                     选项
                   </div>
                 </div>
               </div>
               <div class="dx_r" :style="userType=='t'?'background:rgb(121, 187, 255)':'background:#fcd6cb'">
-                <i v-if="userType=='t'" style="color:#fff">该题分值: {{item.score}}分</i>
-                <i v-else style="color:#ff7245">得分 : 加2分</i>
+                <i v-if="userType=='t' || isMiss==1" :style="userType=='t'?'color:#fff':''">该题分值: {{item.score}}分</i>
+                <i v-else style="color:#ff7245">得分 : 加{{ item.score }}分</i>
               </div>
             </div>
             <div class="ti2">
@@ -89,11 +91,14 @@
 <script>
 export default {
   name: "SeeExam",
-  data() {
+  data () {
     return {
       userType: this.$route.query.userType, // 当前的用户类型 s为学生 t为教师
+      isMiss: this.$route.query.isMiss, // 是否缺考 1为缺考
       examData: null, // 请求到的试卷属性
+      examId: '', // 试卷id
       examList: [], // 试卷题目
+      userName: '', // 用户名
     };
   },
   computed: {
@@ -106,7 +111,7 @@ export default {
       return num;
     },
     // 对题目选项进行处理
-    examSelect() {
+    examSelect () {
       return obj => {
         // 返回一个arr
         var arr = [];
@@ -124,13 +129,13 @@ export default {
       };
     },
     // 总题号
-    examListCount() {
+    examListCount () {
       return len => {
         return len < 10 ? `0${len}` : `${len}`;
       };
     },
     // 题目序列号
-    examListIndex() {
+    examListIndex () {
       return val => {
         return val + 1 < 10 ? `0${val + 1}` : `${val + 1}`;
       };
@@ -138,13 +143,23 @@ export default {
   },
   methods: {
     // 返回上一页
-    goTopPaper() {
+    goTopPaper () {
       this.$router.go(-1);
     }
   },
-  created() {
+  created () {
+    // 对试卷id进行缓存
+    // 防止刷新后获取不到params  从本地获取
+    var sessionExamId = window.sessionStorage.getItem('examId');
+    if (sessionExamId) {
+      this.examId = window.sessionStorage.getItem('examId');
+    } else {
+      window.sessionStorage.setItem('examId', this.$route.params.id);
+      this.examId = this.$route.params.id;
+    }
     // 请求试卷详细内容
-      this.$http.post(`/business/examQuestionMark/pageDetail?id=${this.$route.params.id}`).then((res) => {
+    if (this.userType == 't') {
+      this.$http.post(`/business/examQuestionMark/pageDetail?id=${this.examId}`).then((res) => {
         this.examData = res.data.examPage;
         // 对试题进行排序(根据题号)
         function examListSort (val) {
@@ -154,6 +169,25 @@ export default {
         }
         this.examList = res.data.list.sort(examListSort('sort'));
       })
+    } else if (this.userType == 's') {
+      this.$http.get(`/business/examPlan/examStart?id=${this.examId}`).then((res) => {
+        this.examData = res.data.examPage;
+        // 对试题进行排序(根据题号)
+        function examListSort (val) {
+          return (a, b) => {
+            return a[val] - b[val]
+          }
+        }
+        this.examList = res.data.list.sort(examListSort('sort'));
+      })
+    }
+    this.userName = window.localStorage.getItem("userName");
+  },
+    // 离开该路由时候 清空所需要清空的东西
+  beforeRouteLeave (to, from, next) {
+    window.sessionStorage.removeItem('examId');
+    window.sessionStorage.removeItem('examTime');
+    next();
   }
 };
 </script>
@@ -176,6 +210,7 @@ export default {
 .SeeExam .el-header {
   text-align: left;
   line-height: 32px;
+  overflow: hidden;
 }
 .SeeExam .xuanxiangStyle {
   color: #4ac1e1;
@@ -329,5 +364,4 @@ export default {
 .SeeExam .danxuan .danxuan1 {
   font-size: 16px;
 }
-
 </style>

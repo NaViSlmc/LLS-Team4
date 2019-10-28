@@ -12,8 +12,6 @@
         <div class="Myjoin_bg3"></div>
       </div>
     </div>
-                <el-col :span="24">
-
     <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
       <!-- 我的问答 -->
       <el-tab-pane label="我的问答" name="first">
@@ -55,6 +53,7 @@
                 <el-link type="primary" :underline="false" @click="getQuestionDetail(row.id)">
                   <i class="el-icon-tickets"></i>详情
                 </el-link>
+                <el-col :span="24">
                 <el-dialog
                   class="dialog"
                   title="解答详情"
@@ -64,10 +63,10 @@
                 >
                   问题：<span>1</span>
                 </el-dialog>
+                </el-col>
               </template>
             </el-table-column>
           </el-table>
-
           <el-pagination background layout="prev, pager, next" :total="40"></el-pagination>
         </div>
       </el-tab-pane>
@@ -112,8 +111,6 @@
         </div>
       </el-tab-pane>
     </el-tabs>
-                </el-col>
-
   </div>
 </template>
 

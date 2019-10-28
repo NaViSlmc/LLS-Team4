@@ -208,7 +208,8 @@ export default {
           id:item.id
         },
         query: {
-          userType: 't'
+          userType: 't',
+          isMiss: 0
         }
       })
     },
