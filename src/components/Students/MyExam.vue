@@ -61,7 +61,7 @@
 
         <el-table-column label="操作" width="210">
           <template slot-scope="scope">
-            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='缺考'" type="danger" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
+            <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='缺考'" type="danger" @click="pushMissExam(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
             <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='开始考试'" type="primary" @click="startExam(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
             <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='暂未开考'" type="info" size="small">{{ examPaperStatus(scope.row) }}</el-button>
             <el-button style="width:100px" v-if="examPaperStatus(scope.row)=='查看试卷'" type="primary" @click="handleClick(scope.row)" size="small">{{ examPaperStatus(scope.row) }}</el-button>
@@ -82,7 +82,7 @@ export default {
     return {
       activeIndex: "1",
       page: "1",
-      pageSize: "4",
+      pageSize: "6",
       typeId: "1",
       tableData: null, // 表格值
       recordsTotal: 0 // 表格值的总条目数(后端返回)
@@ -105,13 +105,24 @@ export default {
         }
         // return item.isStart?  item.isTimeout? new Date(item.endTime)>=new Date()  ?'开始考试':'缺考':'开始考试':'考试未开始';
       }
-
     }
   },
   methods: {
+    // 缺考跳转
+    pushMissExam (item) {
+      this.$router.push({
+        name: `SeeExam`,
+        params: {
+          id: item.id
+        },
+        query: {
+          userType: 's',
+          isMiss: 1
+        }
+      })
+    },
     // 开始考试 跳转
-    startExam(item) {
-      console.log(item)
+    startExam (item) {
       this.$router.push({
         name: `MySeeExam`,
         params: {
@@ -137,7 +148,7 @@ export default {
       this.$router.push({
         name: `SeeExam`,
         params: {
-          id:item.id
+          id: item.id
         },
         query: {
           userType: 's'
@@ -153,6 +164,7 @@ export default {
           typeId: typeId // 考试类型id
         }
       }).then((res) => {
+        // 请求到试卷内容后进行处理
         if (res.data.status != 500) {
           this.tableData = res.data.data;
           this.recordsTotal = res.data.recordsTotal;

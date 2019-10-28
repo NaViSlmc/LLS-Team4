@@ -12,7 +12,7 @@
             </div>-->
             <div class="top1-left-1">学生姓名：{{userName}}</div>
 
-            <div class="top1-left-2">试卷名称：{{examData.name}}</div>
+            <div class="top1-left-2">试卷名称：{{examPlan.name}}</div>
           </div>
 
           <!-- 头部右边 -->
@@ -24,7 +24,7 @@
         </div>
         <!-- 提交按钮 -->
         <div class="T-button">
-          <el-button type="primary" @click="pushExam" class="e-button">提交</el-button>
+          <el-button type="primary" @click="pushExam" class="e-button">提交试卷</el-button>
           <div class="top3">
             <el-button @click="mygoTopPaper" title="返回上一页">x</el-button>
           </div>
@@ -90,23 +90,17 @@ export default {
     return {
       userName: "", // 用户名
       examId: '', // 试卷id
-      intervalTime: '',
+      intervalTime: '', // 考试结束时间
       examData: null, // 请求到的试卷属性
       examList: [], // 试卷题目
+      examPlan:null, // 试卷属性内容
+      pushExamList: [], // 提交试卷时所需数组
       timer: 0, // 定时器id
       minutes: '00', // 倒计时分
       seconds: '00' // 倒计时秒
     };
   },
   computed: {
-    // 该试卷总分计算
-    examPaperTotalScore () {
-      var num = 0;
-      this.examList.map(item => {
-        num += item.score;
-      });
-      return num;
-    },
     // 对题目选项进行处理
     examSelect () {
       return obj => {
@@ -145,15 +139,28 @@ export default {
     },
     // 提交试卷
     pushExam () {
-      this.$http.post("business/examResult/submit", {
+      // 提交试卷时内容处理
+      // 需要格式List: [{answer:'c',.	questionId:'xxxxxxxxxxxxxxxxxxxxxx'}]
+      this.pushExamList = [];
+      this.examList.map((item) => {
+        this.pushExamList.push({
+          answer: item.answer,
+          questionId: item.id
+        })
+      })
+      this.$http.post("/business/examResult/submit", {
         examResult: {
           planId: this.examId
         },
-        List: [
-          
-        ]
+        List: this.pushExamList
       }).then((res) => {
-        
+        if(res.data == '') {
+          this.$message({
+            type: 'success',
+            message: '试卷提交成功'
+          })
+          this.mygoTopPaper();
+        }
       });
     },
     // 倒计时
@@ -164,14 +171,14 @@ export default {
       var x2 = Math.floor(x1); //小时
       var f1 = (x1 - x2) * 60;
       var f2 = Math.floor(f1); //分
-      this.minutes = (f2 + x2 * 60) < 10?`0${Math.floor(f2 + x2 * 60)}`:`${Math.floor(f2 + x2 * 60)}`;
-      var m1 = (f1 - f2) * 60;
-      this.seconds = Math.floor(m1) < 10?`0${Math.floor(m1)}`:`${Math.floor(m1)}`; //秒
+      this.minutes = (f2 + x2 * 60) < 10 ? `0${Math.floor(f2 + x2 * 60)}` : `${Math.floor(f2 + x2 * 60)}`;
+      var m1 = (f1 - f2) * 60; // 秒
+      this.seconds = Math.floor(m1) < 10 ? `0${Math.floor(m1)}` : `${Math.floor(m1)}`; //秒
       // 时间到处理
-      if(this.seconds == 0 && this.minutes == 0) {
+      if (this.seconds == 0 && this.minutes == 0) {
         window.clearInterval(this.timer);
         // 调用提交试卷方法
-      }else if(this.seconds == 0 && this.minutes == 2) {
+      } else if (this.seconds == 0 && this.minutes == 2) {
         this.$message({
           type: 'warning',
           message: '考试时间还剩2分，请注意'
@@ -181,7 +188,7 @@ export default {
   },
   created () {
     // 对试卷id进行缓存
-    // 刷新后获取不到route  从本地获取
+    // 防止刷新后获取不到params  从本地获取
     var sessionExamId = window.sessionStorage.getItem('examId');
     if (sessionExamId) {
       this.examId = window.sessionStorage.getItem('examId');
@@ -192,12 +199,13 @@ export default {
       this.intervalTime = this.$route.params.time;
       this.examId = this.$route.params.id;
     }
-    
+
     // 请求试卷详细内容
     this.$http
       .get(`/business/examPlan/examStart?id=${this.examId}`)
       .then(res => {
         this.examData = res.data.examPage;
+        this.examPlan = res.data.examPlan;
         // 对试题进行排序(根据题号)
         function examListSort (val) {
           return (a, b) => {
@@ -208,21 +216,23 @@ export default {
         //开启定时器
         this.timer = setInterval(this.showTimer, 1000);
       });
-    // 获取到id
+    // 获取到userName
     this.userName = window.localStorage.getItem("userName");
-    // 清空examId
-    // window.sessionStorage.removeItem('examId');
   },
-  beforeRouteLeave(to,form,next) {
+  // 离开该路由时候 清空所需要清空的东西
+  beforeRouteLeave (to, from, next) {
     window.clearInterval(this.timer);
     window.sessionStorage.removeItem('examId');
     window.sessionStorage.removeItem('examTime');
     next();
-  },
+  }
 };
 </script>
 
 <style>
+.MySeeExam .el-main {
+  padding: 20px;
+}
 .MySeeExam .basic_data_tit {
   border-left: 4px solid #4abfe0;
   box-sizing: border-box;
@@ -343,7 +353,7 @@ export default {
 .MySeeExam .top1-left-2 {
   width: 50%;
   float: left;
-  line-height: 40px;
+  line-height: 80px;
 }
 .MySeeExam .top1-center {
   height: 100%;
@@ -409,13 +419,11 @@ export default {
 .MySeeExam .daojishi {
   float: left;
   width: 10%;
-  height: 100%;
-  /* background: red; */
-  float: left;
   font-size: 22px;
   line-height: 80px;
   text-align: center;
   overflow: hidden;
+  margin-left:15%;
 }
 .MySeeExam #spanTime {
   width: 50px;
@@ -425,7 +433,7 @@ export default {
 }
 .MySeeExam .T-button {
   float: left;
-  width: 30%;
+  width: 10%;
 }
 .MySeeExam .e-button {
   margin-top: 20px;

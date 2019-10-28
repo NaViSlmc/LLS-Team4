@@ -96,6 +96,7 @@ export default {
   },
   created () {
     this.userName = window.localStorage.getItem('userName'); // 从本地仓库拿到用户名
+    this.activeIndex = this.$route.name?this.$route.name:'MyMajorStudent';
   }
 }
 </script>
