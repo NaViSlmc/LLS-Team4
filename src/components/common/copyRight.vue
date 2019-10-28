@@ -6,8 +6,8 @@
           <img src="../../images/logo.png">
         </span>
         <span>|</span>
-        &nbsp;
-        培养能力 塑造人才
+        <span class='fo1'>        &nbsp;
+        培养能力 塑造人才</span>
       </div>
       <div class="z-footer2">
         <a href="#">联系我们</a>
@@ -46,7 +46,7 @@ export default {
 }
 
 .z-footer1 {
-  height: 26px;
+  height: 35px;
   line-height: 26px;
   text-align: center;
   color: #afb0b2;
@@ -100,4 +100,8 @@ export default {
 .z-upLogo span {
   display: inline-block;
 }
+.z-footer1 .fo1{
+margin-top:10px;
+}
+
 </style>

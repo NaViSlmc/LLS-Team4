@@ -315,7 +315,7 @@ export default {
   height: 80px !important;
 }
 .MySeeExam .top1 {
-  width: 55%;
+  width: 60%;
   height: 100%;
   margin-left: 50px;
   float: left;
@@ -425,7 +425,7 @@ export default {
 }
 .MySeeExam .T-button {
   float: left;
-  width: 30%;
+  width: 10%;
 }
 .MySeeExam .e-button {
   margin-top: 20px;
