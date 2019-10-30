@@ -50,7 +50,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
               <template slot-scope="{row}">
-                <el-link type="primary" :underline="false" @click="getQuestionDetail(row.id)">
+                <el-link type="primary" :underline="false" @click="getQuestionDetail(row.id,e)">
                   <i class="el-icon-tickets"></i>详情
                 </el-link>
                 <el-col :span="24">
@@ -230,9 +230,6 @@ export default {
   width: 455px;
   height: 144px;
   background-size: 485px 144px;
-}
-.Myjoin .el-tabs__nav-scroll {
-  margin-left: 15%;
 }
 .Myjoin_center {
   width: 80%;

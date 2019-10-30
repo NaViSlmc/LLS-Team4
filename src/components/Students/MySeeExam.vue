@@ -72,7 +72,7 @@
             </div>
             <div class="ti2">
               <el-row v-for="(itemSel,index) in examSelect(item)" :key="index">
-                <el-radio v-model="item.answer" :label="itemSel.label">{{ itemSel.content }}</el-radio>
+                <el-radio @change="saveExamPaper" v-model="item.answer" :label="itemSel.label">{{ itemSel.content }}</el-radio>
               </el-row>
             </div>
             <!-- 正确答案 -->
@@ -93,7 +93,7 @@ export default {
       intervalTime: '', // 考试结束时间
       examData: null, // 请求到的试卷属性
       examList: [], // 试卷题目
-      examPlan:null, // 试卷属性内容
+      examPlan: null, // 试卷属性内容
       pushExamList: [], // 提交试卷时所需数组
       timer: 0, // 定时器id
       minutes: '00', // 倒计时分
@@ -133,6 +133,12 @@ export default {
     }
   },
   methods: {
+    // 点击选项，本地缓存试卷
+    //  -------- 防止用户刷新页面答案消失 -----------
+    saveExamPaper () {
+      // 进行对象序列化
+      window.sessionStorage.setItem('examList', JSON.stringify(this.examList));
+    },
     // 返回上一页
     mygoTopPaper () {
       this.$router.go(-1);
@@ -154,7 +160,7 @@ export default {
         },
         List: this.pushExamList
       }).then((res) => {
-        if(res.data == '') {
+        if (res.data == '') {
           this.$message({
             type: 'success',
             message: '试卷提交成功'
@@ -178,6 +184,7 @@ export default {
       if (this.seconds == 0 && this.minutes == 0) {
         window.clearInterval(this.timer);
         // 调用提交试卷方法
+        this.pushExam();
       } else if (this.seconds == 0 && this.minutes == 2) {
         this.$message({
           type: 'warning',
@@ -201,6 +208,7 @@ export default {
     }
 
     // 请求试卷详细内容
+    // 判断是否有试卷缓存
     this.$http
       .get(`/business/examPlan/examStart?id=${this.examId}`)
       .then(res => {
@@ -212,7 +220,10 @@ export default {
             return a[val] - b[val];
           };
         }
-        this.examList = res.data.list.sort(examListSort("sort"));
+        // 判断试卷缓存
+        this.examList = window.sessionStorage.getItem('examList')?
+                        JSON.parse(window.sessionStorage.getItem('examList')):
+                        res.data.list.sort(examListSort("sort"));
         //开启定时器
         this.timer = setInterval(this.showTimer, 1000);
       });
@@ -222,14 +233,22 @@ export default {
   // 离开该路由时候 清空所需要清空的东西
   beforeRouteLeave (to, from, next) {
     window.clearInterval(this.timer);
-    window.sessionStorage.removeItem('examId');
-    window.sessionStorage.removeItem('examTime');
+    window.sessionStorage.clear();
     next();
   }
 };
 </script>
 
 <style>
+@keyframes djs {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
 .MySeeExam .el-main {
   padding: 20px;
 }
@@ -423,7 +442,9 @@ export default {
   line-height: 80px;
   text-align: center;
   overflow: hidden;
-  margin-left:15%;
+  margin-left: 10%;
+  animation: djs 2s ease-in-out infinite;
+
 }
 .MySeeExam #spanTime {
   width: 50px;
