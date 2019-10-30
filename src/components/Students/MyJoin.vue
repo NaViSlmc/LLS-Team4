@@ -12,108 +12,132 @@
         <div class="Myjoin_bg3"></div>
       </div>
     </div>
-                <el-col :span="24">
+    <el-col :span="24">
+      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+        <!-- 我的问答 -->
+        <el-tab-pane label="我的问答" name="first">
+          <div class="Myjoin_center">
+            <p>我的问答</p>
+            <el-table ref="table" :data="questionsData">
+              <el-table-column label="问题" width="250">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.subject }}</span>
+                </template>
+              </el-table-column>
 
-    <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-      <!-- 我的问答 -->
-      <el-tab-pane label="我的问答" name="first">
-        <div class="Myjoin_center">
-          <p>我的问答</p>
-          <el-table ref="table" :data="questionsData">
-            <el-table-column label="问题" width="250">
-              <template slot-scope="scope">
-                <span>{{ scope.row.subject }}</span>
-              </template>
-            </el-table-column>
+              <el-table-column label="问题描述" width="370">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.question }}</span>
+                </template>
+              </el-table-column>
 
-            <el-table-column label="问题描述" width="370">
-              <template slot-scope="scope">
-                <span>{{ scope.row.question }}</span>
-              </template>
-            </el-table-column>
+              <el-table-column label="提问类型" width="110" style="text-align:left">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.typeName }}</span>
+                </template>
+              </el-table-column>
 
-            <el-table-column label="提问类型" width="110" style="text-align:left">
-              <template slot-scope="scope">
-                <span>{{ scope.row.typeName }}</span>
-              </template>
-            </el-table-column>
+              <el-table-column label="发起时间" width="240">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.explanationTime }}</span>
+                </template>
+              </el-table-column>
 
-            <el-table-column label="发起时间" width="240">
-              <template slot-scope="scope">
-                <span>{{ scope.row.explanationTime }}</span>
-              </template>
-            </el-table-column>
+              <el-table-column label="状态" width="130">
+                <template slot-scope="scope">
+                  <el-tag type="success" v-if="scope.row.isSolution == 'Y'">已回复</el-tag>
+                  <el-tag v-else type="warning">未回复</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" align="center">
+                <template slot-scope="{row}">
+                  <el-link type="primary" :underline="false" @click="getQuestionDetail(row.id)">
+                    <i class="el-icon-tickets"></i>详情
+                  </el-link>
+                  <el-dialog
+                    class="dialog"
+                    title="解答详情"
+                    :visible.sync="dialogVisible"
+                    width="60%"
+                    :before-close="handleClose"
+                  >
+                    问题：
+                    <span>1</span>
+                  </el-dialog>
+                </template>
+              </el-table-column>
+            </el-table>
 
-            <el-table-column label="状态" width="130">
-              <template slot-scope="scope">
-                <el-tag type="success" v-if="scope.row.isSolution == 'Y'">已回复</el-tag>
-                <el-tag v-else type="warning">未回复</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" align="center">
-              <template slot-scope="{row}">
-                <el-link type="primary" :underline="false" @click="getQuestionDetail(row.id)">
-                  <i class="el-icon-tickets"></i>详情
-                </el-link>
-                <el-dialog
-                  class="dialog"
-                  title="解答详情"
-                  :visible.sync="dialogVisible"
-                  width="60%"
-                  :before-close="handleClose"
-                >
-                  问题：<span>1</span>
-                </el-dialog>
-              </template>
-            </el-table-column>
-          </el-table>
+            <el-pagination background layout="prev, pager, next" :total="40"></el-pagination>
+          </div>
+        </el-tab-pane>
 
-          <el-pagination background layout="prev, pager, next" :total="40"></el-pagination>
-        </div>
-      </el-tab-pane>
+        <!-- 我的反馈 -->
+        <el-tab-pane label="我的反馈" name="second">
+          <div class="Myjoin_center">
+            <div class="fankui">
+              <p>我的反馈</p>
+              <el-tag @click="Mynew">新建反馈</el-tag>
+            </div>
+            <!-- 我的反馈 -->
+            <div class="Mycenter-table" v-if="isShow">
+              <el-table ref="table" :data="feedbackData">
+                <el-table-column label="意见" width="250">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.subject }}</span>
+                  </template>
+                </el-table-column>
 
-      <!-- 我的反馈 -->
-      <el-tab-pane label="我的反馈" name="second">
-        <div class="Myjoin_center">
-          <p>我的反馈</p>
-          <el-table ref="table" :data="feedbackData">
-            <el-table-column label="意见" width="250">
-              <template slot-scope="scope">
-                <span>{{ scope.row.subject }}</span>
-              </template>
-            </el-table-column>
+                <el-table-column label="反馈类别" width="140">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.typeName }}</span>
+                  </template>
+                </el-table-column>
 
-            <el-table-column label="反馈类别" width="140">
-              <template slot-scope="scope">
-                <span>{{ scope.row.typeName }}</span>
-              </template>
-            </el-table-column>
+                <el-table-column label="问题说明" width="400" style="text-align:left">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.content }}</span>
+                  </template>
+                </el-table-column>
 
-            <el-table-column label="问题说明" width="400" style="text-align:left">
-              <template slot-scope="scope">
-                <span>{{ scope.row.content }}</span>
-              </template>
-            </el-table-column>
+                <el-table-column label="发起时间" width="180">
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.handleTime }}</span>
+                  </template>
+                </el-table-column>
 
-            <el-table-column label="发起时间" width="180">
-              <template slot-scope="scope">
-                <span>{{ scope.row.handleTime }}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="状态" width="240">
-              <template slot-scope="scope">
-                <el-tag type="success" v-if="scope.row.isHandle == 'Y'">已回复</el-tag>
-                <el-tag v-else type="warning">未回复</el-tag>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-pagination background layout="prev, pager, next" :total="40"></el-pagination>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
-                </el-col>
-
+                <el-table-column label="状态" width="240">
+                  <template slot-scope="scope">
+                    <el-tag type="success" v-if="scope.row.isHandle == 'Y'">已回复</el-tag>
+                    <el-tag v-else type="warning">未回复</el-tag>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-pagination background layout="prev, pager, next" :total="40"></el-pagination>
+            </div>
+            <!-- 新建反馈 -->
+            <div class="Mycenter-new" v-else>
+              <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+                <el-form-item label="问题分类">
+                  <el-select>
+                    <el-option></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="意见">
+                  <el-input v-model="formLabelAlign.name" placeholder="请输入你的问题建议"></el-input>
+                </el-form-item>
+                <el-form-item label="问题说明">
+                  <el-input type="textarea"></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="onSubmit">提交</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </el-col>
   </div>
 </template>
 
@@ -132,17 +156,35 @@ export default {
       // 我的反馈
       page: "1",
       pageSize: "4",
-      dialogVisible:false
+      dialogVisible: false,
+      isShow: true,
+      // 表单
+      labelPosition: "right",
+      formLabelAlign: {
+        name: "",
+        region: "",
+        type: ""
+      }
     };
   },
   methods: {
     handleClose() {
-      this.dialogVisible = false
+      this.dialogVisible = false;
+    },
+    Mynew(e) {
+      console.log(e);
+      if (this.isShow == true) {
+        this.isShow = false;
+        e.target.innerHTML = "我的意见";
+      } else {
+        this.isShow = true;
+        e.target.innerHTML = "新建反馈";
+      }
     },
     // 我的问答中的查看详情
     getQuestionDetail(id) {
       console.log(id);
-      this.dialogVisible = true
+      this.dialogVisible = true;
     },
     //当前组件用到的函数
     handleClick(tab) {
@@ -189,6 +231,10 @@ export default {
 .Myjoin .el-table td,
 .el-table th.is-leaf {
   text-align: center;
+}
+.Myjoin .fankui {
+  width: 100%;
+  height: 50px;
 }
 .Myjoin_box {
   height: 144px;
@@ -242,14 +288,31 @@ export default {
   margin-left: 210px;
   /* background: cadetblue; */
   margin-top: 30px;
+  height: 500px;
 }
 .Myjoin_center p {
   border-left: 4px solid #4abfe0;
   box-sizing: border-box;
   padding-left: 20px;
+  width: 50%;
   height: 20px;
   line-height: 20px;
   font-size: 18px;
   color: #606060;
+  float: left;
+}
+.Myjoin_center .fankui .el-tag {
+  float: right;
+}
+.Mycenter-new {
+  margin-top: 10px;
+  height: 400px;
+}
+.Mynew-1 {
+  height: 50px;
+  width: 100%;
+}
+.Myjoin .input1 {
+  width: 70%;
 }
 </style>
