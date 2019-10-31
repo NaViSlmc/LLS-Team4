@@ -1,9 +1,6 @@
 <template>
   <div class="Myjoin">
-    <div
-      class="Myjoin_box"
-      style="background-color: rgb(238, 82, 108); background-image: linear-gradient(45deg, rgb(238, 82, 108) 0%, rgb(238, 82, 108) 1%, rgb(243, 106, 128) 100%);"
-    >
+    <div class="Myjoin_box" style="background-color: rgb(238, 82, 108); background-image: linear-gradient(45deg, rgb(238, 82, 108) 0%, rgb(238, 82, 108) 1%, rgb(243, 106, 128) 100%);">
       <div class="Myjoin_wrap">
         <div class="Myjoin_msg" style="margin-left: 110px;">
           <span style="margin-top: 40px;">我的参与</span>
@@ -54,21 +51,11 @@
                   <el-link type="primary" :underline="false" @click="getQuestionDetail(row.id)">
                     <i class="el-icon-tickets"></i>详情
                   </el-link>
-                  <el-dialog
-                    class="dialog"
-                    title="解答详情"
-                    :visible.sync="dialogVisible"
-                    width="60%"
-                    :before-close="handleClose"
-                  >
-                    问题：
-                    <span>1</span>
-                  </el-dialog>
                 </template>
               </el-table-column>
             </el-table>
 
-            <el-pagination background layout="prev, pager, next" :total="40"></el-pagination>
+            <!-- <el-pagination background layout="prev, pager, next" :total="40"></el-pagination> -->
           </div>
         </el-tab-pane>
 
@@ -76,11 +63,11 @@
         <el-tab-pane label="我的反馈" name="second">
           <div class="Myjoin_center">
             <div class="fankui">
-              <p>我的反馈</p>
-              <el-tag @click="Mynew">新建反馈</el-tag>
+              <p id="fktit">我的反馈</p>
+              <el-button id="fkbtn" type="primary" @click="Mynew">新建反馈</el-button>
             </div>
             <!-- 我的反馈 -->
-            <div class="Mycenter-table" v-if="isShow">
+            <div class="Mycenter-table" v-show="isShow">
               <el-table ref="table" :data="feedbackData">
                 <el-table-column label="意见" width="250">
                   <template slot-scope="scope">
@@ -102,7 +89,7 @@
 
                 <el-table-column label="发起时间" width="180">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.handleTime }}</span>
+                    <span>{{ scope.row.commitTime }}</span>
                   </template>
                 </el-table-column>
 
@@ -113,21 +100,27 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <el-pagination background layout="prev, pager, next" :total="40"></el-pagination>
+
+              <el-pagination @current-change="currentChange" :current-page="+page" :total="recordsTotal" :page-size="+pageSize" background layout="prev, pager, next">
+
+              </el-pagination>
+
             </div>
             <!-- 新建反馈 -->
-            <div class="Mycenter-new" v-else>
-              <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+            <div class="Mycenter-new" v-show="!isShow">
+              <el-form label-position="right" label-width="80px" :model="formLabelAlign">
                 <el-form-item label="问题分类">
-                  <el-select>
-                    <el-option></el-option>
+                  <el-select v-model="formLabelAlign.type">
+                    <el-option value="产品bug"></el-option>
+                    <el-option value="功能建议"></el-option>
+                    <el-option value="用户体验"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="意见">
                   <el-input v-model="formLabelAlign.name" placeholder="请输入你的问题建议"></el-input>
                 </el-form-item>
                 <el-form-item label="问题说明">
-                  <el-input type="textarea"></el-input>
+                  <el-input type="textarea" :rows="4" v-model="formLabelAlign.desc"></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="onSubmit">提交</el-button>
@@ -138,16 +131,20 @@
         </el-tab-pane>
       </el-tabs>
     </el-col>
+    <el-dialog class="dialog" title="解答详情" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
+      问题：
+      <span>1</span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 export default {
   name: "MyJoin",
-  data() {
+  data () {
     //组件用到的数据
     return {
-      //我的问题
+      //我的问答
       apage: "1",
       apageSize: "4",
       activeName: "first",
@@ -155,40 +152,75 @@ export default {
       feedbackData: null,
       // 我的反馈
       page: "1",
-      pageSize: "4",
-      dialogVisible: false,
-      isShow: true,
+      pageSize: "7",
+      dialogVisible: false, // dialog显示隐藏控制
+      isShow: true, // 新建反馈切换
+      recordsTotal: 0, // 总条目数
+      detailData: null, // 查看详情数据
       // 表单
-      labelPosition: "right",
       formLabelAlign: {
         name: "",
-        region: "",
+        desc: "",
         type: ""
       }
     };
   },
   methods: {
-    handleClose() {
+    // 关闭详情页
+    handleClose () {
       this.dialogVisible = false;
+      this.detailData = null;
     },
-    Mynew(e) {
-      console.log(e);
-      if (this.isShow == true) {
-        this.isShow = false;
-        e.target.innerHTML = "我的意见";
+    // 新建反馈分页
+    currentChange (current) {
+      this.page = current;
+      this.handleClick();
+    },
+    // 新建反馈提交
+    onSubmit () {
+      this.$http.post('/business/opinionsSuggestions/submitComments', {
+        content: this.formLabelAlign.desc,   //反馈问题说明
+        subject: this.formLabelAlign.name,   //反馈意见
+        typeName: this.formLabelAlign.type   //问题分类
+      }).then(res => {
+        if (res.data == '') {
+          this.$message({
+            type: 'success',
+            message: '反馈提交成功'
+          });
+          this.Mynew();
+          this.formLabelAlign = { name: '', region: '', type: '' };
+          this.handleClick();
+        } else {
+          this.$message({
+            type: 'warning',
+            message: `res.data.msg`
+          });
+        }
+      })
+    },
+    // 新建反馈切换按钮
+    Mynew () {
+      if (this.isShow) {
+        document.getElementById('fktit').textContent = '新建反馈'
+        document.querySelector('#fkbtn span').textContent = '我的反馈'
       } else {
-        this.isShow = true;
-        e.target.innerHTML = "新建反馈";
+        document.getElementById('fktit').textContent = '我的反馈'
+        document.querySelector('#fkbtn span').textContent = '新建反馈'
       }
+      this.isShow = !this.isShow;
     },
     // 我的问答中的查看详情
-    getQuestionDetail(id) {
-      console.log(id);
+    getQuestionDetail (id) {
+      this.$http.get(`/business/studentQuestion/detail/${id}`).then(res => {
+        this.detailData = res.data;
+        console.log(this.detailData)
+      })
       this.dialogVisible = true;
     },
     //当前组件用到的函数
-    handleClick(tab) {
-      if (tab.name == "second") {
+    handleClick () {
+      if (this.activeName == "second") {
         // 我的反馈
         this.$http
           .post("/business/opinionsSuggestions/page", {
@@ -198,6 +230,7 @@ export default {
           })
           .then(res => {
             this.feedbackData = res.data.data;
+            this.recordsTotal = res.data.recordsTotal;
           });
       } else {
         this.$http
@@ -212,8 +245,7 @@ export default {
       }
     }
   },
-  created() {
-    //组件加载完成后的生命周期回调,如果页面一加载就需要展示数据，那么数据在这获取
+  created () {
     // 我的问题
     this.$http
       .get("/business/studentQuestion/listAll", {
@@ -228,6 +260,12 @@ export default {
 };
 </script>
 <style>
+.Myjoin .el-pagination {
+  margin-top: 10px;
+}
+.Myjoin .el-tabs__nav {
+  margin-left: 15%;
+}
 .Myjoin .el-table td,
 .el-table th.is-leaf {
   text-align: center;
@@ -285,21 +323,18 @@ export default {
   margin-left: 210px;
   /* background: cadetblue; */
   margin-top: 30px;
-  height: 500px;
+  min-height: 500px;
 }
 .Myjoin_center p {
   border-left: 4px solid #4abfe0;
   box-sizing: border-box;
   padding-left: 20px;
-  width: 50%;
+  width: 88%;
   height: 20px;
   line-height: 20px;
   font-size: 18px;
   color: #606060;
   float: left;
-}
-.Myjoin_center .fankui .el-tag {
-  float: right;
 }
 .Mycenter-new {
   margin-top: 10px;
