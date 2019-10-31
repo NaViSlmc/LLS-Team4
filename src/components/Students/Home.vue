@@ -55,7 +55,6 @@ a {
   width: 1100px;
   margin: auto;
   line-height: 45px;
-  height: 46px !important;
   padding-left: 10px !important;
 }
 
@@ -63,7 +62,9 @@ a {
   height: 45px !important;
   line-height: 45px !important;
 }
-
+.el-menu.el-menu--horizontal{
+  border-bottom: none
+}
 .el-menu--horizontal > .el-submenu .el-submenu__title {
   height: 45px !important;
   line-height: 45px !important;

@@ -69,7 +69,7 @@
             <!-- 我的反馈 -->
             <div class="Mycenter-table" v-show="isShow">
               <el-table ref="table" :data="feedbackData">
-                <el-table-column label="意见" width="250">
+                <el-table-column label="意见" width="240">
                   <template slot-scope="scope">
                     <span>{{ scope.row.subject }}</span>
                   </template>
@@ -131,9 +131,23 @@
         </el-tab-pane>
       </el-tabs>
     </el-col>
-    <el-dialog class="dialog" title="解答详情" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
-      问题：
-      <span>1</span>
+    <el-dialog v-if="detailData" class="dialog" title="解答详情" :visible.sync="dialogVisible" width="60%" :before-close="handleClose">
+      <el-row :gutter="20">
+        <el-col :span="20" :offset="2">问题：{{detailData.subject}}</el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="20"  :offset="2">问题说明：{{detailData.question}}</el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="9"  :offset="2">提问人：{{detailData.proposeStudentId}}</el-col>
+        <el-col :span="9"  :offset="2">提问时间：{{detailData.explanationTime}}</el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="20"  :offset="2">问题标签：<el-tag>{{detailData.typeName}}</el-tag></el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="20"  :offset="2">答案详情：{{detailData.explanation}}</el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
@@ -214,9 +228,9 @@ export default {
     getQuestionDetail (id) {
       this.$http.get(`/business/studentQuestion/detail/${id}`).then(res => {
         this.detailData = res.data;
-        console.log(this.detailData)
+        this.dialogVisible = true;
       })
-      this.dialogVisible = true;
+      
     },
     //当前组件用到的函数
     handleClick () {
@@ -287,7 +301,12 @@ export default {
   float: left;
   margin-left: 147px;
 }
-
+.Myjoin .el-row{
+  margin-bottom: 20px;
+}
+.Myjoin .el-col{
+  padding:10px;
+}
 .Myjoin_box .Myjoin_msg span {
   /* width: 110px; */
   height: 26px;

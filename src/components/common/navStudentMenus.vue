@@ -101,6 +101,9 @@ export default {
 }
 </script>
 <style>
+.el-header{
+  height: 48px !important
+}
 a {
   color: #6c6868;
   font-size: 12px;
