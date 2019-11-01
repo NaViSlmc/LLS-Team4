@@ -108,18 +108,18 @@
             </div>
             <!-- 新建反馈 -->
             <div class="Mycenter-new" v-show="!isShow">
-              <el-form label-position="right" label-width="80px" :model="formLabelAlign">
-                <el-form-item label="问题分类">
+              <el-form ref="form" :rules="rules" label-position="right" label-width="80px" :model="formLabelAlign">
+                <el-form-item label="问题分类" prop="type">
                   <el-select v-model="formLabelAlign.type">
                     <el-option value="产品bug"></el-option>
                     <el-option value="功能建议"></el-option>
                     <el-option value="用户体验"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="意见">
+                <el-form-item label="意见" prop="name">
                   <el-input v-model="formLabelAlign.name" placeholder="请输入你的问题建议"></el-input>
                 </el-form-item>
-                <el-form-item label="问题说明">
+                <el-form-item label="问题说明" prop="desc">
                   <el-input type="textarea" :rows="4" v-model="formLabelAlign.desc"></el-input>
                 </el-form-item>
                 <el-form-item>
@@ -136,17 +136,18 @@
         <el-col :span="20" :offset="2">问题：{{detailData.subject}}</el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="20"  :offset="2">问题说明：{{detailData.question}}</el-col>
+        <el-col :span="20" :offset="2">问题说明：{{detailData.question}}</el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="9"  :offset="2">提问人：{{detailData.proposeStudentId}}</el-col>
-        <el-col :span="9"  :offset="2">提问时间：{{detailData.explanationTime}}</el-col>
+        <el-col :span="9" :offset="2">提问人：{{detailData.proposeStudentId}}</el-col>
+        <el-col :span="9" :offset="2">提问时间：{{detailData.explanationTime}}</el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="20"  :offset="2">问题标签：<el-tag>{{detailData.typeName}}</el-tag></el-col>
+        <el-col :span="20" :offset="2">问题标签：<el-tag>{{detailData.typeName}}</el-tag>
+        </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="20"  :offset="2">答案详情：{{detailData.explanation}}</el-col>
+        <el-col :span="20" :offset="2">答案详情：{{detailData.explanation}}</el-col>
       </el-row>
     </el-dialog>
   </div>
@@ -175,7 +176,19 @@ export default {
       formLabelAlign: {
         name: "",
         desc: "",
-        type: ""
+        type: "产品bug"
+      },
+      // 表单规则
+      rules: {
+        name: [
+          { required: true, message: '请输入正确的意见', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请选择问题分类', trigger: 'change' }
+        ],
+        desc: [
+          { required: true, message: '请输入问题说明', trigger: 'blur' }
+        ]
       }
     };
   },
@@ -192,26 +205,33 @@ export default {
     },
     // 新建反馈提交
     onSubmit () {
-      this.$http.post('/business/opinionsSuggestions/submitComments', {
-        content: this.formLabelAlign.desc,   //反馈问题说明
-        subject: this.formLabelAlign.name,   //反馈意见
-        typeName: this.formLabelAlign.type   //问题分类
-      }).then(res => {
-        if (res.data == '') {
-          this.$message({
-            type: 'success',
-            message: '反馈提交成功'
-          });
-          this.Mynew();
-          this.formLabelAlign = { name: '', region: '', type: '' };
-          this.handleClick();
-        } else {
-          this.$message({
-            type: 'warning',
-            message: `res.data.msg`
-          });
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.$http.post('/business/opinionsSuggestions/submitComments', {
+            content: this.formLabelAlign.desc,   //反馈问题说明
+            subject: this.formLabelAlign.name,   //反馈意见
+            typeName: this.formLabelAlign.type   //问题分类
+          }).then(res => {
+            if (res.data == '') {
+              this.$message({
+                type: 'success',
+                message: '反馈提交成功'
+              });
+              this.Mynew();
+              this.formLabelAlign = { name: '', region: '', type: '产品bug' };
+              this.handleClick();
+            } else {
+              this.$message({
+                type: 'warning',
+                message: `res.data.msg`
+              });
+            }
+          })
+        }else {
+          return false
         }
-      })
+      });
+
     },
     // 新建反馈切换按钮
     Mynew () {
@@ -230,7 +250,7 @@ export default {
         this.detailData = res.data;
         this.dialogVisible = true;
       })
-      
+
     },
     //当前组件用到的函数
     handleClick () {
@@ -301,11 +321,11 @@ export default {
   float: left;
   margin-left: 147px;
 }
-.Myjoin .el-row{
+.Myjoin .el-row {
   margin-bottom: 20px;
 }
-.Myjoin .el-col{
-  padding:10px;
+.Myjoin .el-col {
+  padding: 10px;
 }
 .Myjoin_box .Myjoin_msg span {
   /* width: 110px; */

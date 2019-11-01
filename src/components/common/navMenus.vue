@@ -23,18 +23,16 @@
         </div>
       </el-col>
       <el-col :span="6">
-        <div class="grid-content bg-purple">
-          <ul class="loginUser">
-            <li>
-              <span style="cursor:pointer;color:#A3A3A4;font-size:14px" @click="toggUserData">
-                {{ userName }}
-              </span>
-              <span class="ask_title">
-                在线解答
-              </span>
-              <span style="cursor:pointer;color:#A3A3A4;font-size:14px;margin-left:15px" @click="userOut">退出</span>
-            </li>
-          </ul>
+        <div class="grid-content">
+          <span class="ask_title1" @click="toggUserData">
+            {{ userName }}
+          </span>
+          <div class="ask_title2">
+            在线解答
+          </div>
+          <span class="ask_title3" @click="userOut">
+            退出
+          </span>
         </div>
       </el-col>
     </el-row>
@@ -147,14 +145,100 @@ a {
 .logoutSvg {
   opacity: 0.1;
 }
-.ask_title {
-  background: #49c0e0;
-  font-size: 14px;
-  color: white;
-  padding: 15px 5px;
-}
-.ask_title:hover {
+.ask_title2 {
+  width: 70px;
+  height: 46px;
+  line-height: 46px;
+  text-align: center;
   cursor: pointer;
+  color: rgb(163, 163, 164);
+  position: relative;
+  transition: 0.2s linear;
+  display: inline-block;
+  font-size: 14px;
+}
+.ask_title2:after {
+  width: 70px;
+  cursor: pointer;
+  position: absolute;
+  content: "";
+  top: 50%;
+  bottom: 50%;
+  right: 0;
+  left: 0;
+  z-index: -1;
+  background: #409EFF;
+  transition: 0.2s linear;
+  border-radius: 4px;
+}
+.ask_title2:hover {
+  color: #ffffff;
+}
+.ask_title2:hover:after {
+  top: 0;
+  bottom: 0;
+}
+.ask_title1 {
+  width: 70px;
+  height: 46px;
+  line-height: 46px;
+  text-align: center;
+  cursor: pointer;
+  color: rgb(163, 163, 164);
+  position: relative;
+  transition: 0.2s linear;
+  display: inline-block;
+  font-size: 14px;
+}
+.ask_title1:after {
+  width: 0px;
+  cursor: pointer;
+  position: absolute;
+  content: "";
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background: #409EFF;
+  transition: 0.2s linear;
+  border-radius: 4px;
+}
+.ask_title1:hover {
+  color: #ffffff;
+}
+.ask_title1:hover:after {
+  width: 70px;
+}
+.ask_title3 {
+  width: 70px;
+  height: 46px;
+  line-height: 46px;
+  text-align: center;
+  cursor: pointer;
+  color: rgb(163, 163, 164);
+  position: relative;
+  transition: 0.2s linear;
+  display: inline-block;
+  font-size: 14px;
+}
+.ask_title3:after {
+  width: 0px;
+  cursor: pointer;
+  position: absolute;
+  content: "";
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+  background: #409EFF;
+  transition: 0.2s linear;
+  border-radius: 4px;
+}
+.ask_title3:hover {
+  color: #ffffff;
+}
+.ask_title3:hover:after {
+  width: 70px;
 }
 #navMenus .el-badge__content.is-fixed {
   top: 11px;
