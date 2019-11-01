@@ -163,7 +163,7 @@ a {
   right: 0;
   left: 0;
   z-index: -1;
-  background: #409EFF;
+  background: rgb(133, 188, 243);
   transition: 0.2s linear;
   border-radius: 4px;
 }
@@ -206,7 +206,7 @@ a {
   width: 70px;
 }
 .ask_title3 {
-  width: 70px;
+  width: 50px;
   height: 46px;
   line-height: 46px;
   text-align: center;
@@ -226,7 +226,7 @@ a {
   bottom: 0;
   right: 0;
   z-index: -1;
-  background: #409EFF;
+  background: rgb(165, 208, 250);
   transition: 0.2s linear;
   border-radius: 4px;
 }
@@ -234,7 +234,7 @@ a {
   color: #ffffff;
 }
 .ask_title3:hover:after {
-  width: 70px;
+  width: 50px;
 }
 #navMenus .el-badge__content.is-fixed {
   top: 11px;
