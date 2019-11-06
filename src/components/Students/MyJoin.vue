@@ -217,13 +217,16 @@ export default {
                 type: 'success',
                 message: '反馈提交成功'
               });
+              // 切换到我的反馈页面
               this.Mynew();
+              // 初始化新建反馈内容
               this.formLabelAlign = { name: '', region: '', type: '产品bug' };
+              // 重新请求页面内容
               this.handleClick();
             } else {
               this.$message({
                 type: 'warning',
-                message: `res.data.msg`
+                message: `${res.data.msg}`
               });
             }
           })
@@ -252,7 +255,7 @@ export default {
       })
 
     },
-    //当前组件用到的函数
+    // 切换标签页
     handleClick () {
       if (this.activeName == "second") {
         // 我的反馈
@@ -281,13 +284,11 @@ export default {
   },
   created () {
     // 我的问题
-    this.$http
-      .get("/business/studentQuestion/listAll", {
+    this.$http.get("/business/studentQuestion/listAll", {
         page: this.apage, //获取数据的第几页  页数
         pageSize: +this.apageSize, //每页的数据条数
         params: {} //默认先传空值
-      })
-      .then(res => {
+      }).then(res => {
         this.questionsData = res.data;
       });
   }

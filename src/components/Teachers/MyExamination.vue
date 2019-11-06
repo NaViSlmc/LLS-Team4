@@ -215,7 +215,7 @@ export default {
     },
     // 删除试卷功能  巨麻烦的功能。。。
     handleDelete(index, item, tableData, page) {
-      // index为当前组件在当前页的下标  // item为该组件内容
+      // index为当前组件在当前表格的下标  // item为该组件内容 // tableData为当前表格内容 // page为当前表格index
       // 查看试卷是否被关联
       this.$http.get(`/business/examPlan/paperStatus/` + item.id).then(res => {
         if (typeof res.data === "boolean") {
@@ -226,15 +226,13 @@ export default {
                 this.recordsTotal--;
                 tableData.splice(index, 1); // 删除当前列表条目
                 if (tableData.length == 0) {
-                  this.$http
-                    .post("/exam/examPage/page", {
+                  this.$http.post("/exam/examPage/page", {
                       pageSize: this.pageSize,
                       page: this[page] - 1, // 此处需要减1
                       params: {
                         typeId: this.index
                       }
-                    })
-                    .then(res => {
+                    }).then(res => {
                       this[`data${this.index}`] = res.data.data;
                     });
                 }
