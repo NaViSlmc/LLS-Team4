@@ -75,7 +75,6 @@
                 <el-radio @change="saveExamPaper" v-model="item.answer" :label="itemSel.label">{{ itemSel.content }}</el-radio>
               </el-row>
             </div>
-            <!-- 正确答案 -->
           </div>
         </div>
       </el-main>

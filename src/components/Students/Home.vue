@@ -77,7 +77,7 @@ a {
   line-height: 200px;
 }
 
-.el-main {
+#thome .el-main {
   /*background-color: #E9EEF3;*/
   padding: 0;
   color: #333;

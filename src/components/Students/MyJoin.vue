@@ -16,13 +16,13 @@
           <div class="Myjoin_center">
             <p>我的问答</p>
             <el-table ref="table" :data="questionsData">
-              <el-table-column label="问题" width="250">
+              <el-table-column label="问题" width="200">
                 <template slot-scope="scope">
                   <span>{{ scope.row.subject }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="问题描述" width="370">
+              <el-table-column label="问题描述" width="240">
                 <template slot-scope="scope">
                   <span>{{ scope.row.question }}</span>
                 </template>
@@ -34,19 +34,19 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="发起时间" width="240">
+              <el-table-column label="发起时间" width="200">
                 <template slot-scope="scope">
                   <span>{{ scope.row.explanationTime }}</span>
                 </template>
               </el-table-column>
 
-              <el-table-column label="状态" width="130">
+              <el-table-column label="状态" width="100">
                 <template slot-scope="scope">
                   <el-tag type="success" v-if="scope.row.isSolution == 'Y'">已回复</el-tag>
                   <el-tag v-else type="warning">未回复</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" align="center">
+              <el-table-column label="操作" align="center" width="80">
                 <template slot-scope="{row}">
                   <el-link type="primary" :underline="false" @click="getQuestionDetail(row.id)">
                     <i class="el-icon-tickets"></i>详情
@@ -81,7 +81,7 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column label="问题说明" width="400" style="text-align:left">
+                <el-table-column label="问题说明" width="200" style="text-align:left">
                   <template slot-scope="scope">
                     <span>{{ scope.row.content }}</span>
                   </template>
@@ -93,7 +93,7 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column label="状态" width="240">
+                <el-table-column label="状态" width="100">
                   <template slot-scope="scope">
                     <el-tag type="success" v-if="scope.row.isHandle == 'Y'">已回复</el-tag>
                     <el-tag v-else type="warning">未回复</el-tag>

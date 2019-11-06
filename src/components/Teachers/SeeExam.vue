@@ -75,7 +75,7 @@
               </el-row>
             </div>
             <!-- 正确答案 -->
-            <div class="ti3">
+            <div class="ti3" v-show="!isMiss==1">
               <span class="ti3-1">
                 正确答案：
                 <span>{{ item.answer }}</span>
