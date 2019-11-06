@@ -341,10 +341,6 @@ export default {
 };
 </script>
 <style>
-* {
-  /* border: 1px solid black; */
-  /* box-sizing: border-box; */
-}
 .el-tabs--border-card>.el-tabs__content {
   box-sizing: border-box;
 }
