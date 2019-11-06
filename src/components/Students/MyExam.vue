@@ -249,9 +249,7 @@ export default {
   height: 144px;
 }
 .Exam_center {
-  width: 80%;
   margin-left: 210px;
-  /* background: cadetblue; */
   margin-top: 30px;
 }
 .Exam_center p {
